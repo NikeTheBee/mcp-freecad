@@ -63,7 +63,19 @@ pipeline those tools call.
 > AICopilot still works only because the bridge runs its `headless_server.py` by explicit
 > path (see launch.json), not via Mod auto-load.
 
+## Phase 3 graft #2 — AirPlaneDesign (cloned, validated, on-demand only)
+- Source: `https://github.com/FredsFactory/FreeCAD_AirPlaneDesign` (LGPL-2.1, v0.4.1, min FreeCAD 0.18).
+- Cloned (shallow) into `addons/AirPlaneDesign` — gitignored, **NOT** activated in the Mod auto-load dir
+  (the safety guard requires explicit per-workbench authorization to put agent-chosen code on the
+  auto-load path; Rocket was explicitly authorized, this one is awaiting an OK).
+- GUI-only workbench (`InitGui.py`, no `Init.py`); wing/rib/panel builders need FreeCADGui. The
+  headless-usable core is `libAeroShapes.py` (pure aero-coordinate math) — but it does
+  `import DraftTools` at load, so stub `DraftTools` before importing (see skill-drone / the test).
+- Validated headless on-demand via `install/drone_graft_test.py` (builds a valid NACA-4 airfoil wire).
+- See `skills/skill-drone/SKILL.md` for usage.
+
 ### Re-clone the grafts (since `addons/` is gitignored)
 ```
 git clone --depth 1 https://github.com/davesrocketshop/Rocket addons/Rocket
+git clone --depth 1 https://github.com/FredsFactory/FreeCAD_AirPlaneDesign addons/AirPlaneDesign
 ```
