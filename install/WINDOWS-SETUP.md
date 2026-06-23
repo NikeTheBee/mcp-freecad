@@ -79,3 +79,13 @@ pipeline those tools call.
 git clone --depth 1 https://github.com/davesrocketshop/Rocket addons/Rocket
 git clone --depth 1 https://github.com/FredsFactory/FreeCAD_AirPlaneDesign addons/AirPlaneDesign
 ```
+
+## Phase 4 — home-grown layers (DONE)
+First-party Python package `server/freecad_layers/` (tracked), the spec's §7 robustness layers:
+- `state` — project memory in `project_state/state.json` (read at session start, update after each
+  validated step); `verify` — compact geometry verdicts + `watertight()` gate before STL;
+  `checkpoint` — named `.FCStd` saves under `checkpoints/` + rollback.
+- Import inside FreeCAD / execute_python: `sys.path.insert(0, "<repo>\\server")` then
+  `from freecad_layers import state, verify, checkpoint`. See `skills/skill-verify/SKILL.md`.
+- Validated headless: `A:\FreeCAD\bin\freecadcmd.exe install\layers_test.py` → `LAYERS_TEST_OK`.
+- Runtime artifacts (`project_state/*.json`, `checkpoints/*.FCStd`) are gitignored; dirs kept via `.gitkeep`.

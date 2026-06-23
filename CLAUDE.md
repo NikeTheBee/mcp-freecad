@@ -25,8 +25,10 @@ User (natural language) → Claude Code → MCP `freecad` server (stdio)
 
 ## Token-minimal golden rules
 - Text-only feedback by default. No automatic screenshots — only on explicit request or an ambiguous verification failure.
-- Read `/project_state/` at the start of a work session before asking the user to re-describe context (once that layer exists — Phase 4, not yet built).
-- Update project state after each validated step, not before.
+- Read project memory at session start: `state.summary()` (see `skill-verify`) before asking the user to re-describe context.
+- Update project state after each *validated* step, not before: `state.record_feature(...)`.
+- Verify geometry before continuing: `verify.verdict(obj)`; gate STL export on `verify.watertight(obj)`.
+- Checkpoint before risky/large ops: `checkpoint.save("name")`; roll back with `checkpoint.restore("name")`.
 - Prefer the bridge's named tools over ad hoc Python execution for recurring operations.
 
 ## Anti-patterns
@@ -36,6 +38,6 @@ User (natural language) → Claude Code → MCP `freecad` server (stdio)
 
 ## Pointers
 - Full spec: `@docs/CAHIER_DES_CHARGES.md`
-- Domain knowledge: `/skills/<domain>/SKILL.md` — load on demand. Available: `skill-rocket` (Rocketry WB), `skill-drone` (AirPlaneDesign WB).
-- Project memory: `/project_state/` (not yet populated — Phase 4)
-- Checkpoints: `/checkpoints/` (not yet populated — Phase 4)
+- Domain knowledge: `/skills/<domain>/SKILL.md` — load on demand. Available: `skill-rocket` (Rocketry WB), `skill-drone` (AirPlaneDesign WB), `skill-verify` (home-grown layers).
+- Home-grown layers (§7): `server/freecad_layers/` — `state` (project memory), `verify` (geometry checks), `checkpoint` (rollback). See `skill-verify`.
+- Project memory data: `/project_state/state.json` · Checkpoints: `/checkpoints/*.FCStd` (runtime artifacts, gitignored)
