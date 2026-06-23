@@ -32,7 +32,38 @@ Done on this machine:
 - Newly registered MCP servers only become available as callable tools in a *new* Claude Code session —
   restart the session before trying to drive FreeCAD through natural language.
 
-## Next step (Phase 1 validation, requires a fresh session)
-Start a new Claude Code session in this project, then ask it to create a simple parametric part
-(e.g. a box) purely through the `freecad` MCP tools, and confirm the result via a measurement/bounding-box
-tool rather than a screenshot.
+## Phase 1 validation — DONE
+The full MCP→FreeCAD pipeline was validated by talking directly to the headless socket server on
+`localhost:23456` with the project's own framing protocol (`install/phase1_smoke_test.py`):
+create_document → create_box(10×20×30) → get_volume (6000 mm³ ✓) → get_bounding_box (✓). Compact text
+feedback, no screenshots — the token-minimal behaviour the spec requires.
+
+Note: the `freecad` MCP *tools* only load in a **fresh** Claude Code session. To validate the natural-language
+path specifically, start a new session and ask for a simple part; the smoke test already proves the server
+pipeline those tools call.
+
+## Phase 2 graft #1 — Rocket Workbench (cloned, validated, NOT yet auto-loaded)
+- Source: `https://github.com/davesrocketshop/Rocket` (LGPL-2.1+, v5.1.1, requires FreeCAD ≥1.0).
+- Cloned (shallow) into `addons/Rocket` — **in-project, gitignored, NOT in the FreeCAD `Mod` auto-load dir**
+  (per user choice: vet before auto-execution).
+- Vetted: `Init.py` is clean (registers materials + `.ork`/`.rkt` import-export + a migration meta_path hook;
+  no network/shell-out). Bundled FreeCAD Python already has numpy/scipy/matplotlib/shapely; only `python-docx`
+  is missing (affects `.docx` report export only).
+- Validated headless on-demand via `install/rocket_graft_test.py` (builds a valid body-tube solid). See
+  `skills/skill-rocket/SKILL.md` for the headless invocation pattern (use `Rocket.Feature*` proxies directly;
+  the `Ui/Commands/Cmd*.py` wrappers `import FreeCADGui` unconditionally and break under `freecadcmd`).
+- **ACTIVATED**: installed into FreeCAD 1.1's **versioned** user Mod dir
+  `%APPDATA%\FreeCAD\v1-1\Mod\Rocket` so it auto-loads. Verified: `import Rocket` resolves in
+  `freecadcmd` with no manual `sys.path`, and builds valid rocketry solids.
+
+> ⚠️ **Mod dir gotcha:** FreeCAD 1.1's user data dir is version-specific —
+> `getUserAppDataDir()` = `%APPDATA%\FreeCAD\v1-1\`. Workbenches must go in
+> `%APPDATA%\FreeCAD\v1-1\Mod\` to auto-load. The non-versioned `%APPDATA%\FreeCAD\Mod\`
+> (where AGENT-INSTALL.md and the AICopilot step put things) is **not** auto-loaded.
+> AICopilot still works only because the bridge runs its `headless_server.py` by explicit
+> path (see launch.json), not via Mod auto-load.
+
+### Re-clone the grafts (since `addons/` is gitignored)
+```
+git clone --depth 1 https://github.com/davesrocketshop/Rocket addons/Rocket
+```

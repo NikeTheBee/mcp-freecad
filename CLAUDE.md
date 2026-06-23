@@ -36,6 +36,6 @@ User (natural language) → Claude Code → MCP `freecad` server (stdio)
 
 ## Pointers
 - Full spec: `@docs/CAHIER_DES_CHARGES.md`
-- Domain knowledge: `/skills/<domain>/SKILL.md` (not yet populated — later phases)
+- Domain knowledge: `/skills/<domain>/SKILL.md` — load on demand. Available: `skill-rocket` (Rocketry WB graft).
 - Project memory: `/project_state/` (not yet populated — Phase 4)
 - Checkpoints: `/checkpoints/` (not yet populated — Phase 4)

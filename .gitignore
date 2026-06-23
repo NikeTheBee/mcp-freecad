@@ -6,5 +6,8 @@ __pycache__/
 # Third-party MCP base server — cloned locally, not vendored (see install/WINDOWS-SETUP.md)
 /server/freecad-mcp/
 
+# Third-party FreeCAD workbenches (grafts) — cloned locally, not vendored
+/addons/
+
 # Local, machine-specific Claude Code settings
 .claude/settings.local.json

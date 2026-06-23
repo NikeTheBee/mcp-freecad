@@ -1,0 +1,5 @@
+# Normalize line endings; let git handle CRLF on checkout for Windows users.
+* text=auto
+*.py text
+*.md text
+*.json text
