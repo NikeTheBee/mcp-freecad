@@ -1,0 +1,21 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "freecad-headless",
+      "runtimeExecutable": "A:\\FreeCAD\\bin\\freecadcmd.exe",
+      "runtimeArgs": [
+        "C:\\Users\\Administrateur\\AppData\\Roaming\\FreeCAD\\Mod\\AICopilot\\headless_server.py"
+      ],
+      "port": 23456
+    },
+    {
+      "name": "freecad-mcp-bridge",
+      "runtimeExecutable": "C:\\Users\\Administrateur\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "runtimeArgs": [
+        "C:\\Users\\Administrateur\\.freecad-mcp\\freecad_mcp_server.py"
+      ],
+      "port": 0
+    }
+  ]
+}
