@@ -57,4 +57,6 @@ on demand to keep token cost low.
 - `install/` — install guides + test suite · `project_state/`, `checkpoints/` — runtime data (gitignored)
 
 ## License
-Not yet finalized (open decision; FreeCAD core and both grafted workbenches are LGPL-2.1).
+[MIT](LICENSE) © 2026 NikeTheBee — free to use, but **attribution is required**: keep the copyright
+notice and credit this project and its author. See [`CREDITS.md`](CREDITS.md) for the third-party
+projects this builds on (FreeCAD and the grafted workbenches are LGPL-2.1 and are not vendored here).
