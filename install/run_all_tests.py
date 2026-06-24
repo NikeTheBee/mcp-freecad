@@ -29,6 +29,7 @@ FREECAD_TESTS = [
     ("fem_test.py", "FEM_OK"),
     ("memory_recovery_test.py", "MEMORY_RECOVERY_OK"),
     ("assembly_test.py", "ASSEMBLY_OK"),
+    ("gear_test.py", "GEAR_OK"),
 ]
 
 
