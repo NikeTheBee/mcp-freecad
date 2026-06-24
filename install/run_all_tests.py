@@ -24,6 +24,7 @@ FREECAD_TESTS = [
     ("rocket_graft_test.py", "ROCKET_GRAFT_OK"),
     ("drone_graft_test.py", "DRONE_GRAFT_OK"),
     ("layers_test.py", "LAYERS_TEST_OK"),
+    ("print3d_test.py", "PRINT3D_OK"),
 ]
 
 

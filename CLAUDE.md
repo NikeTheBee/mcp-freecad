@@ -39,6 +39,6 @@ User (natural language) → Claude Code → MCP `freecad` server (stdio)
 
 ## Pointers
 - Full spec: `@docs/CAHIER_DES_CHARGES.md`
-- Domain knowledge: `/skills/<domain>/SKILL.md` — load on demand. Available: `skill-rocket` (Rocketry WB), `skill-drone` (AirPlaneDesign WB), `skill-verify` (home-grown layers).
+- Domain knowledge: `/skills/<domain>/SKILL.md` — load on demand. Available: `skill-rocket` (Rocketry WB), `skill-drone` (AirPlaneDesign WB), `skill-verify` (home-grown layers), `skill-print3d` (STL export).
 - Home-grown layers (§7): `server/freecad_layers/` — `state` (project memory), `verify` (geometry checks), `checkpoint` (rollback). See `skill-verify`.
 - Project memory data: `/project_state/state.json` · Checkpoints: `/checkpoints/*.FCStd` (runtime artifacts, gitignored)
