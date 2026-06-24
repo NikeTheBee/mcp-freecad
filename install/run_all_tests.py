@@ -20,9 +20,13 @@ REPO = HERE.parent
 FREECADCMD = os.environ.get("FREECAD_MCP_FREECAD_BIN", r"A:\FreeCAD\bin\freecadcmd.exe")
 
 # (script, success sentinel) — run under freecadcmd
-FREECAD_TESTS = [
+# Graft tests need the third-party workbench clones under addons/. Set
+# MCPFC_SKIP_GRAFTS=1 (e.g. in CI with only bundled FreeCAD) to skip them.
+GRAFT_TESTS = [
     ("rocket_graft_test.py", "ROCKET_GRAFT_OK"),
     ("drone_graft_test.py", "DRONE_GRAFT_OK"),
+]
+CORE_TESTS = [
     ("layers_test.py", "LAYERS_TEST_OK"),
     ("print3d_test.py", "PRINT3D_OK"),
     ("exchange_test.py", "EXCHANGE_OK"),
@@ -31,6 +35,8 @@ FREECAD_TESTS = [
     ("assembly_test.py", "ASSEMBLY_OK"),
     ("gear_test.py", "GEAR_OK"),
 ]
+FREECAD_TESTS = (CORE_TESTS if os.environ.get("MCPFC_SKIP_GRAFTS")
+                 else GRAFT_TESTS + CORE_TESTS)
 
 
 def _port_open(host="localhost", port=23456) -> bool:

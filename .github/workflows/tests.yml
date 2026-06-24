@@ -1,0 +1,36 @@
+name: tests
+
+# Runs the bundled-FreeCAD test suite against a conda-forge FreeCAD.
+# Graft tests (Rocket/AirPlaneDesign) and the socket/MCP-loop tests are skipped
+# here — they need third-party clones / a live headless server. They run locally
+# via `python install/run_all_tests.py` (see install/AGENT-INSTALL.md).
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  freecad-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up FreeCAD (conda-forge)
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-name: fc
+          create-args: >-
+            python=3.11
+            freecad=1.0
+
+      - name: Run core test suite
+        shell: bash -el {0}
+        env:
+          MCPFC_SKIP_GRAFTS: "1"
+        run: |
+          FCBIN="$(which freecadcmd || which FreeCADCmd)"
+          echo "freecadcmd: $FCBIN"
+          export FREECAD_MCP_FREECAD_BIN="$FCBIN"
+          python install/run_all_tests.py

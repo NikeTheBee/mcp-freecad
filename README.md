@@ -48,19 +48,24 @@ real MCP client and proves the full client→bridge→FreeCAD path end-to-end.
 The AI calls the `freecad` tools, FreeCAD builds the parametric box headless, and the AI reports the
 volume / bounding box in plain text — no manual modeling, no screenshot on the happy path.
 
-## Capabilities (by phase)
-| Phase | Capability | Status |
+## Capabilities
+| Area | Capability | Status |
 |---|---|---|
-| 0 | Base MCP server installed & registered | ✅ |
-| 1 | Natural-language → parametric part, validated end-to-end | ✅ |
-| 2 | **Rocketry** graft (Rocket WB) — nose/body/fins | ✅ auto-loading |
-| 3 | **Aero** graft (AirPlaneDesign WB) — NACA airfoils, fuselage profiles | ✅ on-demand |
-| 4 | **Project memory · geometric verification · checkpoints** | ✅ |
-| 5 | Public publication (license, CI, polish) | in progress |
-| — | Robotics/ROS2, CFD, FEM, CAM | roadmap (`docs/`) |
+| Core | Natural-language → parametric part, validated end-to-end (loop proven) | ✅ |
+| Robustness | Project memory · geometric verification · checkpoints/rollback | ✅ |
+| Onboarding | One-command cross-platform installer; Claude Code + Desktop | ✅ |
+| Rocketry | Rocket WB graft — nose/body/fins | ✅ |
+| Aero | AirPlaneDesign graft — NACA airfoils, fuselage profiles | ✅ |
+| Fabrication | STL (3D print, watertight-gated) · STEP/IGES exchange | ✅ |
+| Analysis | FEM (CalculiX, ships with FreeCAD) | ✅ setup |
+| Mechanism | Multi-part assemblies · involute spur gears | ✅ |
+| Robotics/ROS2 | URDF export graft | roadmap (needs workbench install) |
+| CAM · CFD · Gazebo sim | G-code · OpenFOAM · ROS2 simulation | needs FreeCAD 1.2-dev / external runtimes |
 
-Domain knowledge lives in [`skills/`](skills) (`skill-rocket`, `skill-drone`, `skill-verify`), loaded
-on demand to keep token cost low.
+Domain knowledge lives in [`skills/`](skills) — `skill-rocket`, `skill-drone`, `skill-print3d`,
+`skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-verify` — loaded on demand to keep
+token cost low. The full suite (`python install/run_all_tests.py`) is **11/11**; a core subset also runs in
+CI ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
 
 ## Repository layout
 - `CLAUDE.md` — short, loaded each session · `docs/` — full spec (cahier des charges)
