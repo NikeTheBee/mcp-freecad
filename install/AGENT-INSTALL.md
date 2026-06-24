@@ -3,6 +3,14 @@
 Forward-looking install guide for an AI agent (or a human) to stand up this system from scratch.
 `WINDOWS-SETUP.md` is the as-built log for the reference machine; this file is the general recipe.
 
+## Fastest path: one command
+```
+python install/bootstrap.py --with-grafts            # see --help for flags
+```
+This automates everything below (detect FreeCAD, resolve the real versioned Mod dir, install base +
+workbench + bridge, pip deps, register the client(s), activate grafts, run tests). The manual steps
+below are for understanding or when the bootstrap can't run.
+
 ## 0. Prerequisites
 - **FreeCAD 1.1.x** installed (note the path to `freecadcmd`/`FreeCADCmd` and the bundled `python`).
 - **Python 3.10+** on PATH (for the MCP bridge server) with `pip`.

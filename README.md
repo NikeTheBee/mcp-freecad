@@ -21,14 +21,26 @@ You (natural language)
 - Current target OS: **Windows** (uses TCP `localhost:23456`); the architecture is cross-platform — see
   [`docs/CAHIER_DES_CHARGES.md`](docs/CAHIER_DES_CHARGES.md).
 
-## Install
-Follow [`install/AGENT-INSTALL.md`](install/AGENT-INSTALL.md) (general, reproducible recipe). The as-built
-log for the reference machine is [`install/WINDOWS-SETUP.md`](install/WINDOWS-SETUP.md).
+## Install (one command)
+```
+git clone <repo> "MCP FREECAD" && cd "MCP FREECAD"
+python install/bootstrap.py --with-grafts        # add --client both for Claude Code + Desktop
+```
+`bootstrap.py` auto-detects FreeCAD, resolves its real version-specific Mod dir, installs the base
+server + workbench + bridge, registers with your MCP client(s), activates grafts, and runs the tests.
+It is idempotent and cross-platform. Manual/explained steps: [`install/AGENT-INSTALL.md`](install/AGENT-INSTALL.md);
+as-built reference log: [`install/WINDOWS-SETUP.md`](install/WINDOWS-SETUP.md).
+
+> **What "plug-and-play" can and can't mean:** FreeCAD must be installed, and the AI client must speak
+> **MCP** (Claude Code, Claude Desktop, any MCP client). A bare local LLM needs an MCP-capable agent
+> runner. CAM needs FreeCAD 1.2-dev; CFD needs OpenFOAM; ROS2 simulation needs a ROS2 runtime.
 
 ## Verify
 ```
-python install/run_all_tests.py        # graft + layer tests (Phase 1 socket test runs if :23456 is live)
+python install/run_all_tests.py    # grafts + layers + Phase 1 socket + MCP-protocol loop (if :23456 live)
 ```
+The MCP-protocol loop test ([`install/mcp_loop_test.py`](install/mcp_loop_test.py)) drives the bridge as a
+real MCP client and proves the full client→bridge→FreeCAD path end-to-end.
 
 ## Example
 > "Create a 10×20×30mm box."

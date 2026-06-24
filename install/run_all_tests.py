@@ -69,6 +69,19 @@ def main() -> int:
         print("[SKIP] phase1_smoke_test.py (no server on localhost:23456 — "
               "start the 'freecad-headless' server first)")
 
+    # MCP-protocol loop test needs the `mcp` SDK + a reachable FreeCAD instance
+    have_mcp = subprocess.run([sys.executable, "-c", "import mcp"],
+                              capture_output=True).returncode == 0
+    if have_mcp and _port_open():
+        ok, out = _run([sys.executable, str(HERE / "mcp_loop_test.py")])
+        passed = ok and "MCP_LOOP_OK" in out
+        results.append(("mcp_loop_test.py", passed))
+        print(f"[{'PASS' if passed else 'FAIL'}] mcp_loop_test.py")
+        if not passed:
+            print("    " + out.strip().replace("\n", "\n    ")[:800])
+    else:
+        print("[SKIP] mcp_loop_test.py (needs the `mcp` SDK and a server on :23456)")
+
     failed = [n for n, ok in results if not ok]
     print(f"\n{len(results) - len(failed)}/{len(results)} passed"
           + (f"; FAILED: {', '.join(failed)}" if failed else ""))

@@ -14,7 +14,8 @@ AI-piloted FreeCAD (natural language → parametric CAD/robotics), via MCP, on W
 - Start FreeCAD GUI: `A:\FreeCAD\bin\freecad.exe`
 - Run a script headless: `A:\FreeCAD\bin\freecadcmd.exe <script.py>`
 - Check MCP server health: `claude mcp list` / `claude mcp get freecad`
-- Re-register server: see `/install/` notes.
+- Re-register / full install: `python install/bootstrap.py [--with-grafts]` (idempotent, cross-platform).
+- Run all tests: `python install/run_all_tests.py` (grafts, layers, socket smoke, MCP-protocol loop).
 
 ## Architecture
 ```
