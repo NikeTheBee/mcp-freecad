@@ -14,6 +14,16 @@ AI-piloted FreeCAD (natural language → parametric CAD/robotics), via MCP, on W
 - Start FreeCAD GUI: `A:\FreeCAD\bin\freecad.exe`
 - Run a script headless: `A:\FreeCAD\bin\freecadcmd.exe <script.py>`
 - Check MCP server health: `claude mcp list` / `claude mcp get freecad`
+
+## Ensure FreeCAD is running (do this before the first freecad tool call)
+The `freecad` tools need a FreeCAD instance on `localhost:23456`. **At session start, call
+`check_freecad_connection`; if it reports none, auto-start the headless server in the BACKGROUND**
+(Bash `run_in_background`, do not block), then poll until `:23456` is open:
+`"A:\FreeCAD\bin\freecadcmd.exe" "%APPDATA%\FreeCAD\Mod\AICopilot\headless_server.py"`
+Do this for the user automatically — don't ask them to launch anything. User-facing fallback if the
+bridge misbehaves: the desktop shortcut "Demarrer FreeCAD pour Claude" (runs `start-freecad-server.bat`).
+NB: the bridge's `spawn_freecad_instance` is broken on Windows (Unix-socket assumption) — use the
+background launch above, not that tool. See `docs/COMPATIBILITY.md` R10.
 - Re-register / full install: `python install/bootstrap.py [--with-grafts]` (idempotent, cross-platform).
 - Run all tests: `python install/run_all_tests.py` (grafts, layers, socket smoke, MCP-protocol loop).
 

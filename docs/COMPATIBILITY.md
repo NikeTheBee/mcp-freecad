@@ -26,6 +26,7 @@ Target: **FreeCAD 1.1.1** (current stable, released 2026-03-25). Last reviewed: 
 | R7 | FEM factory name `makeSolverCalculiXCcxTools` | renamed historically (`makeSolverCalculix*`); could change again | **Watched** — validated on 1.1; `skill-fem` notes the alternates. Add a name-fallback if it breaks on 1.2. |
 | R8 | New **Assembly** WB API churn (young, 1.0+) | `assembly_test` uses `Assembly::AssemblyObject` | **Watched** — placement-based assembly (what we use) is the stable subset; joints are deliberately left to the GUI. |
 | R9 | `Support` → `AttachmentSupport` rename (done in 1.0) | breaks sketch-attachment scripts on <1.0 | **N/A** — our sketches use the default plane; if you add attachment, use `AttachmentSupport` (1.0+). |
+| R10 | Base bridge `spawn_freecad_instance` is Unix-socket-only (`/tmp/*.sock`) | the bridge can't auto-launch FreeCAD on Windows (rejects the `A:\tmp` path) | **Worked around** — on Windows FreeCAD uses TCP `localhost:23456`; ensure the instance via the background headless launch (CLAUDE.md "Ensure FreeCAD is running") or `start-freecad-server.bat`, not `spawn_freecad_instance`. Upstream fix would TCP-enable the spawn path. |
 
 ## Upgrade checklist (when moving FreeCAD versions)
 1. Set `FREECAD_MCP_FREECAD_BIN` to the new `freecadcmd` (or put it on PATH).

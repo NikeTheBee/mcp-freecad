@@ -202,6 +202,30 @@ def register_claude_desktop(python: Path, freecadcmd: Path, dry: bool) -> bool:
     return True
 
 
+def create_desktop_shortcut(dry: bool) -> None:
+    """Windows: drop a desktop shortcut to start-freecad-server.bat (smooth fallback)."""
+    if sys.platform != "win32":
+        return
+    bat = REPO / "start-freecad-server.bat"
+    if not bat.exists():
+        return
+    if dry:
+        log("DRY: would create desktop shortcut 'Demarrer FreeCAD pour Claude'")
+        return
+    ps = (
+        "$w=New-Object -ComObject WScript.Shell;"
+        "$d=[Environment]::GetFolderPath('Desktop');"
+        "$s=$w.CreateShortcut(\"$d\\Demarrer FreeCAD pour Claude.lnk\");"
+        f"$s.TargetPath='{bat}';$s.WorkingDirectory='{REPO}';$s.Save()"
+    )
+    try:
+        subprocess.run(["powershell", "-NoProfile", "-Command", ps],
+                       capture_output=True, timeout=30)
+        log("desktop shortcut created: 'Demarrer FreeCAD pour Claude'")
+    except Exception as e:  # noqa: BLE001
+        log(f"desktop shortcut skipped: {e}")
+
+
 # --------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -235,6 +259,8 @@ def main() -> int:
         if register_claude_desktop(python, freecadcmd, dry):
             registered.append("Claude Desktop")
     log(f"Registered clients: {registered or 'none (use --client)'}")
+
+    create_desktop_shortcut(dry)
 
     if not dry:
         log("Running test suite...")
