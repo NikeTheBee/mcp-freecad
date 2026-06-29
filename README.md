@@ -51,7 +51,7 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 ## Capabilities
 | Area | Capability | Status |
 |---|---|---|
-| Core | Natural-language → parametric part, validated end-to-end (loop proven) | ✅ |
+| Core | Parametric modeling: sketch · Pad/Pocket · spreadsheet-driven variants (loop proven) | ✅ |
 | Robustness | Project memory · geometric verification · checkpoints/rollback | ✅ |
 | Onboarding | One-command cross-platform installer; Claude Code + Desktop | ✅ |
 | Rocketry | Rocket WB graft — nose/body/fins | ✅ |
@@ -62,10 +62,10 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 | Robotics/ROS2 | URDF export graft | roadmap (needs workbench install) |
 | CAM · CFD · Gazebo sim | G-code · OpenFOAM · ROS2 simulation | needs FreeCAD 1.2-dev / external runtimes |
 
-Domain knowledge lives in [`skills/`](skills) — `skill-rocket`, `skill-drone`, `skill-print3d`,
-`skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-verify` — loaded on demand to keep
-token cost low. The full suite (`python install/run_all_tests.py`) is **11/11**; a core subset also runs in
-CI ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
+Domain knowledge lives in [`skills/`](skills) — `skill-partdesign`, `skill-rocket`, `skill-drone`,
+`skill-print3d`, `skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-verify` — loaded on
+demand to keep token cost low. The full suite (`python install/run_all_tests.py`) is **13/13**; a core
+subset also runs in CI ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
 
 ## Repository layout
 - `CLAUDE.md` — short, loaded each session · `docs/` — full spec (cahier des charges)

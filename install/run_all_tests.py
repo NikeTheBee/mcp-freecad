@@ -27,6 +27,8 @@ GRAFT_TESTS = [
     ("drone_graft_test.py", "DRONE_GRAFT_OK"),
 ]
 CORE_TESTS = [
+    ("partdesign_test.py", "PARTDESIGN_OK"),
+    ("spreadsheet_variants_test.py", "SPREADSHEET_OK"),
     ("layers_test.py", "LAYERS_TEST_OK"),
     ("print3d_test.py", "PRINT3D_OK"),
     ("exchange_test.py", "EXCHANGE_OK"),
