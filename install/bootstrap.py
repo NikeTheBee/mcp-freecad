@@ -31,6 +31,8 @@ BASE_REPO_URL = "https://github.com/blwfish/freecad-mcp"
 GRAFTS = {
     "Rocket": ("https://github.com/davesrocketshop/Rocket", True, "v5.1.1"),
     "AirPlaneDesign": ("https://github.com/FredsFactory/FreeCAD_AirPlaneDesign", False, None),
+    # CROSS robotics: dir name must be the namespace `freecad.cross` (see skill-robotics-ros).
+    "freecad.cross": ("https://github.com/galou/freecad.cross", False, None),
 }
 HOME = Path.home()
 BRIDGE_DIR = HOME / ".freecad-mcp"

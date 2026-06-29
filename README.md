@@ -59,13 +59,14 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 | Fabrication | STL (3D print, watertight-gated) · STEP/IGES exchange | ✅ |
 | Analysis | FEM (CalculiX, ships with FreeCAD) | ✅ setup |
 | Mechanism | Multi-part assemblies · involute spur gears | ✅ |
-| Robotics/ROS2 | URDF export graft | roadmap (needs workbench install) |
+| Robotics | URDF/xacro export (CROSS graft, no ROS2 needed) | ✅ |
 | CAM · CFD · Gazebo sim | G-code · OpenFOAM · ROS2 simulation | needs FreeCAD 1.2-dev / external runtimes |
 
 Domain knowledge lives in [`skills/`](skills) — `skill-partdesign`, `skill-rocket`, `skill-drone`,
-`skill-print3d`, `skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-verify` — loaded on
-demand to keep token cost low. The full suite (`python install/run_all_tests.py`) is **13/13**; a core
-subset also runs in CI ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
+`skill-print3d`, `skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-robotics-ros`,
+`skill-verify` — loaded on demand to keep token cost low. The full suite
+(`python install/run_all_tests.py`) is **14/14**; a core subset also runs in CI
+([.github/workflows/tests.yml](.github/workflows/tests.yml)).
 
 ## Repository layout
 - `CLAUDE.md` — short, loaded each session · `docs/` — full spec (cahier des charges)

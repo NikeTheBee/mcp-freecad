@@ -34,6 +34,7 @@ FREECADCMD = resolve_freecadcmd()
 GRAFT_TESTS = [
     ("rocket_graft_test.py", "ROCKET_GRAFT_OK"),
     ("drone_graft_test.py", "DRONE_GRAFT_OK"),
+    ("robotics_urdf_test.py", "ROBOTICS_URDF_OK"),
 ]
 CORE_TESTS = [
     ("partdesign_test.py", "PARTDESIGN_OK"),
