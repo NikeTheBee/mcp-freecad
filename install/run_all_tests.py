@@ -9,6 +9,7 @@ Usage (system Python):  py -3.13 install/run_all_tests.py
 Exit code 0 iff every test that ran passed.
 """
 import os
+import shutil
 import socket
 import subprocess
 import sys
@@ -17,7 +18,15 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 
-FREECADCMD = os.environ.get("FREECAD_MCP_FREECAD_BIN", r"A:\FreeCAD\bin\freecadcmd.exe")
+
+def resolve_freecadcmd() -> str:
+    """env override -> PATH -> known fallback. Survives a FreeCAD path change."""
+    return (os.environ.get("FREECAD_MCP_FREECAD_BIN")
+            or shutil.which("freecadcmd") or shutil.which("FreeCADCmd")
+            or r"A:\FreeCAD\bin\freecadcmd.exe")
+
+
+FREECADCMD = resolve_freecadcmd()
 
 # (script, success sentinel) — run under freecadcmd
 # Graft tests need the third-party workbench clones under addons/. Set

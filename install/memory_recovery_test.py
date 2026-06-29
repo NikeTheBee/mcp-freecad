@@ -25,7 +25,10 @@ os.environ["MCP_FREECAD_PROJECT_DIR"] = _tmp
 import FreeCAD
 from freecad_layers import state, checkpoint
 
-FREECADCMD = os.environ.get("FREECAD_MCP_FREECAD_BIN", r"A:\FreeCAD\bin\freecadcmd.exe")
+import shutil
+FREECADCMD = (os.environ.get("FREECAD_MCP_FREECAD_BIN")
+              or shutil.which("freecadcmd") or shutil.which("FreeCADCmd")
+              or r"A:\FreeCAD\bin\freecadcmd.exe")
 
 # --- Session 1: record intent + a validated feature, then checkpoint ---
 state.init_project("rocket-v1", intent="3-fin rocket, 450mm")

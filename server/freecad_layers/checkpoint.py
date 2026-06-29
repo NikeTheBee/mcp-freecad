@@ -40,6 +40,11 @@ def save(name: str, note: str = "", doc=None) -> str:
     path = _ckpt_dir() / fname
     doc.saveCopy(str(path))
 
+    try:
+        fc_version = ".".join(str(p) for p in FreeCAD.Version()[:3])
+    except Exception:
+        fc_version = "unknown"
+
     s = _state.load()
     s["checkpoints"] = [c for c in s["checkpoints"] if c.get("name") != name]
     s["checkpoints"].append({
@@ -47,6 +52,9 @@ def save(name: str, note: str = "", doc=None) -> str:
         "file": fname,
         "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "note": note,
+        # .FCStd is version-tied: files saved by a newer FreeCAD may lose objects
+        # when reopened in an older one (see docs/COMPATIBILITY.md). Record it.
+        "freecad_version": fc_version,
     })
     _state.save(s)
     return str(path)

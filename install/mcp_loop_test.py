@@ -21,7 +21,10 @@ from mcp.client.stdio import stdio_client
 
 HOME = Path.home()
 SERVER = HOME / ".freecad-mcp" / "freecad_mcp_server.py"
-FREECAD_BIN = os.environ.get("FREECAD_MCP_FREECAD_BIN", r"A:\FreeCAD\bin\freecadcmd.exe")
+import shutil
+FREECAD_BIN = (os.environ.get("FREECAD_MCP_FREECAD_BIN")
+               or shutil.which("freecadcmd") or shutil.which("FreeCADCmd")
+               or r"A:\FreeCAD\bin\freecadcmd.exe")
 
 
 def _text(result) -> str:

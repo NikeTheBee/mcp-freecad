@@ -38,7 +38,7 @@ User (natural language) → Claude Code → MCP `freecad` server (stdio)
 - Don't add greffes/domains all at once — one workbench/capability at a time, validated before the next (see `@docs/CAHIER_DES_CHARGES.md` §11).
 
 ## Pointers
-- Full spec: `@docs/CAHIER_DES_CHARGES.md`
+- Full spec: `@docs/CAHIER_DES_CHARGES.md` · Version/upgrade compatibility audit: `@docs/COMPATIBILITY.md`
 - Domain knowledge: `/skills/<domain>/SKILL.md` — load on demand. Available: `skill-partdesign` (core sketch/Pad/Pocket + spreadsheet variants), `skill-rocket` (Rocketry WB), `skill-drone` (AirPlaneDesign WB), `skill-verify` (home-grown layers), `skill-print3d` (STL export), `skill-fem` (CalculiX FEM), `skill-exchange` (STEP/IGES), `skill-assembly` (multi-part assemblies), `skill-gear` (involute spur gears).
 - Home-grown layers (§7): `server/freecad_layers/` — `state` (project memory), `verify` (geometry checks), `checkpoint` (rollback). See `skill-verify`.
 - Project memory data: `/project_state/state.json` · Checkpoints: `/checkpoints/*.FCStd` (runtime artifacts, gitignored)

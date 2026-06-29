@@ -26,9 +26,11 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 BASE_REPO_URL = "https://github.com/blwfish/freecad-mcp"
+# (url, autoload, ref) — pin to a tested ref so upstream master drift can't
+# silently break grafts; None tracks the default branch (see docs/COMPATIBILITY.md).
 GRAFTS = {
-    "Rocket": ("https://github.com/davesrocketshop/Rocket", True),               # auto-load
-    "AirPlaneDesign": ("https://github.com/FredsFactory/FreeCAD_AirPlaneDesign", False),  # on-demand
+    "Rocket": ("https://github.com/davesrocketshop/Rocket", True, "v5.1.1"),
+    "AirPlaneDesign": ("https://github.com/FredsFactory/FreeCAD_AirPlaneDesign", False, None),
 }
 HOME = Path.home()
 BRIDGE_DIR = HOME / ".freecad-mcp"
@@ -87,15 +89,19 @@ def freecad_user_mod_dir(freecadcmd: Path) -> Path:
 # --------------------------------------------------------------------------
 # Install steps
 # --------------------------------------------------------------------------
-def clone_or_update(url: str, dest: Path, dry: bool) -> None:
+def clone_or_update(url: str, dest: Path, dry: bool, ref: str | None = None) -> None:
     if dest.exists():
         log(f"exists, skipping clone: {dest}")
         return
     if dry:
-        log(f"DRY: would clone {url} -> {dest}")
+        log(f"DRY: would clone {url}{(' @' + ref) if ref else ''} -> {dest}")
         return
     dest.parent.mkdir(parents=True, exist_ok=True)
-    run(["git", "clone", "--depth", "1", url, str(dest)], check=True)
+    cmd = ["git", "clone", "--depth", "1"]
+    if ref:                       # pin to a tested tag/branch
+        cmd += ["--branch", ref]
+    cmd += [url, str(dest)]
+    run(cmd, check=True)
 
 
 def copy_tree(src: Path, dst: Path, dry: bool) -> None:
@@ -121,7 +127,8 @@ def install_base(freecadcmd: Path, moddir: Path, dry: bool) -> None:
 
 
 def pip_install(python: Path, dry: bool) -> None:
-    pkgs = ["mcp>=1.27.2", "mcp-events>=0.1.0"]
+    # Bound the MCP SDK: a breaking 2.x could desync the bridge/loop test.
+    pkgs = ["mcp>=1.27.2,<2", "mcp-events>=0.1.0,<1"]
     if dry:
         log(f"DRY: would pip install {pkgs} into {python}")
         return
@@ -129,9 +136,9 @@ def pip_install(python: Path, dry: bool) -> None:
 
 
 def install_grafts(freecadcmd: Path, moddir: Path, dry: bool) -> None:
-    for name, (url, autoload) in GRAFTS.items():
+    for name, (url, autoload, ref) in GRAFTS.items():
         dest = REPO / "addons" / name
-        clone_or_update(url, dest, dry)
+        clone_or_update(url, dest, dry, ref=ref)
         if autoload:
             copy_tree(dest, moddir / name, dry)
             log(f"activated graft {name} (auto-load)")
