@@ -43,6 +43,7 @@ CORE_TESTS = [
     ("tolerances_test.py", "TOLERANCES_OK"),
     ("mesh_repair_test.py", "MESH_REPAIR_OK"),
     ("urdf_package_test.py", "URDF_PACKAGE_OK"),
+    ("rocket_cp_test.py", "ROCKET_CP_OK"),
     ("layers_test.py", "LAYERS_TEST_OK"),
     ("print3d_test.py", "PRINT3D_OK"),
     ("exchange_test.py", "EXCHANGE_OK"),

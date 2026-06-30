@@ -40,6 +40,13 @@ Then set parametric properties on `obj` (e.g. `obj.Diameter`, `obj.Thickness`, `
 | Stage / parallel stage / pod | `FeatureStage` / `FeatureParallelStage` / `FeaturePod` |
 | Whole rocket assembly | `FeatureRocket` |
 
+## Stability — centre of pressure (§4.3, no CFD)
+CP and static margin come from the analytical **Barrowman** method (subsonic) — no OpenFOAM needed.
+Use `barrowman_cp(rocket)` + `stability_calibers(cp, cg, d_ref)` from `install/rocket_cp_test.py`:
+nose (CN=2), conical transitions, and fins are summed → CP from the tip. A rocket is **stable** when
+CP is **behind** CG; aim for a static margin of ~1–2 calibers (`(CP−CG)/d_ref`). For transonic/supersonic
+or precise drag, that's the CFD path (CfdOF/OpenFOAM, external — see `docs/CAHIER_DES_CHARGES.md` §12).
+
 ## Import / export
 `Init.py` registers OpenRocket (`.ork`) and Rocksim (`.rkt`) import, and `.ork` export — usable via `FreeCAD.open`/`importORK` once `addons/Rocket` is on `sys.path`.
 
