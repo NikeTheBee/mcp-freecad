@@ -26,6 +26,17 @@ Mesh.Mesh(m.Topology).write(r"out.stl")
 ```
 Lower `LinearDeflection` → finer surface (smaller facets, bigger file).
 
+## Repair imported / dirty geometry (§4.6)
+Before printing a supplier STL or a messy mesh, run the standard repair passes (bundled `Mesh`):
+```python
+import Mesh, MeshPart
+m = MeshPart.meshFromShape(Shape=obj.Shape, LinearDeflection=0.2)   # or Mesh.read("supplier.stl")
+m.harmonizeNormals(); m.removeNonManifolds(); m.fillupHoles(10)
+m.removeDuplicatedPoints(); m.removeDuplicatedFacets()
+assert not m.hasNonManifolds() and m.isSolid()   # clean + watertight before export
+```
+Checks: `hasNonManifolds()`, `hasSelfIntersections()`, `isSolid()`. Example: `install/mesh_repair_test.py`.
+
 ## Via the MCP tools (AI-driven)
 `mesh_operations` (export/convert) and `measurement_operations` → `check_solid` / `get_volume` for the
 pre-export sanity check. Always run the watertight/`check_solid` gate first.

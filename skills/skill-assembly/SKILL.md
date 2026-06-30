@@ -36,6 +36,17 @@ Mate/align/axis joints from the Assembly WB need the solver (interactive). For a
 the same intent as `Placement`s computed from the mating geometry. Document joints as design decisions via
 `skill-verify` (`state.add_decision`).
 
+## Fits, tolerances & functional clearances (§4.4)
+For mating parts, size the hole from the shaft by fit class (helper `hole_for_shaft` in
+`install/tolerances_test.py`):
+```python
+FITS = {"loose":(0.20,0.50), "clearance":(0.05,0.20), "close":(0.01,0.06),
+        "transition":(-0.02,0.02), "press":(-0.06,-0.02)}   # diametral allowance (mm)
+hole_d = shaft_d + sum(FITS["clearance"])/2     # e.g. Ø10 shaft -> Ø10.125 hole
+```
+Validate by booleaning the mated parts: a **clearance** fit has ~zero `common().Volume`, a **press**
+fit shows interference. For exact ISO 286 limits use deviation tables; these are practical clearances.
+
 ## Verify
 Combine and check the assembled envelope / interference with `Part.makeCompound` + `skill-verify`
-(`verify.verdict`). Runnable example: `install/assembly_test.py`.
+(`verify.verdict`). Runnable examples: `install/assembly_test.py`, `install/tolerances_test.py`.

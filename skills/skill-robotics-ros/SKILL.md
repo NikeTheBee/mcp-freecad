@@ -45,9 +45,16 @@ et.SubElement(j, "axis", {"xyz": "0 0 1"})
 et.SubElement(j, "limit", {"lower": "-1.57", "upper": "1.57", "effort": "10", "velocity": "1"})
 ```
 
+## Full ROS2 package (not just the URDF string)
+To hand off to a ROS2 workspace, emit an `ament_cmake` package
+(`write_ros2_package` in `install/urdf_package_test.py`): `package.xml` (format 3, `ament_cmake`,
+`robot_state_publisher`/`rviz2` deps) + `CMakeLists.txt` (installs `urdf/` + `launch/`) +
+`urdf/<pkg>.urdf`. No ROS2 runtime needed to *generate* it; `colcon build` it later in a workspace.
+
 ## Verify
 Assert the output contains `<robot`, each `<link>`, `<visual>/<collision>`, and the expected `<box size=>`
-/ `<joint>`. Runnable example: `install/robotics_urdf_test.py` (one-link robot URDF).
+/ `<joint>`; and that the package files are valid XML. Runnable examples:
+`install/robotics_urdf_test.py` (URDF) and `install/urdf_package_test.py` (full package).
 
 > ROS2/Gazebo deferred: spinning up `ros2_control`, Gazebo sim, or MoveIt needs a ROS2 install — export
 > the URDF here, consume it in a ROS2 workspace.

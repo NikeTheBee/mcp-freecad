@@ -38,7 +38,11 @@ GRAFT_TESTS = [
 ]
 CORE_TESTS = [
     ("partdesign_test.py", "PARTDESIGN_OK"),
+    ("partdesign_dressup_test.py", "DRESSUP_OK"),
     ("spreadsheet_variants_test.py", "SPREADSHEET_OK"),
+    ("tolerances_test.py", "TOLERANCES_OK"),
+    ("mesh_repair_test.py", "MESH_REPAIR_OK"),
+    ("urdf_package_test.py", "URDF_PACKAGE_OK"),
     ("layers_test.py", "LAYERS_TEST_OK"),
     ("print3d_test.py", "PRINT3D_OK"),
     ("exchange_test.py", "EXCHANGE_OK"),

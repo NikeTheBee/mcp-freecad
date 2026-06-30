@@ -56,16 +56,16 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 | Onboarding | One-command cross-platform installer; Claude Code + Desktop | ✅ |
 | Rocketry | Rocket WB graft — nose/body/fins | ✅ |
 | Aero | AirPlaneDesign graft — NACA airfoils, fuselage profiles | ✅ |
-| Fabrication | STL (3D print, watertight-gated) · STEP/IGES exchange | ✅ |
+| Fabrication | STL (watertight-gated) · mesh repair · STEP/IGES exchange | ✅ |
 | Analysis | FEM (CalculiX, ships with FreeCAD) | ✅ setup |
-| Mechanism | Multi-part assemblies · involute spur gears | ✅ |
-| Robotics | URDF/xacro export (CROSS graft, no ROS2 needed) | ✅ |
+| Mechanism | Assemblies · spur gears · fillet/chamfer/holes/patterns · fits & tolerances | ✅ |
+| Robotics | URDF/xacro export + full ament_cmake ROS2 package (CROSS graft, no ROS2 needed) | ✅ |
 | CAM · CFD · Gazebo sim | G-code · OpenFOAM · ROS2 simulation | needs FreeCAD 1.2-dev / external runtimes |
 
 Domain knowledge lives in [`skills/`](skills) — `skill-partdesign`, `skill-rocket`, `skill-drone`,
 `skill-print3d`, `skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-robotics-ros`,
 `skill-verify` — loaded on demand to keep token cost low. The full suite
-(`python install/run_all_tests.py`) is **14/14**; a core subset also runs in CI
+(`python install/run_all_tests.py`) is **18/18**; a core subset also runs in CI
 ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
 
 ## Repository layout
