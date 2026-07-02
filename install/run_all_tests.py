@@ -73,6 +73,14 @@ def _run(cmd) -> tuple[bool, str]:
 def main() -> int:
     results = []
 
+    # Security scan (cyber / NF5 / §13) — pure Python, no FreeCAD needed.
+    ok, out = _run([sys.executable, str(HERE / "security_scan.py")])
+    passed = ok and "SECURITY_SCAN_OK" in out
+    results.append(("security_scan.py", passed))
+    print(f"[{'PASS' if passed else 'FAIL'}] security_scan.py")
+    if not passed:
+        print("    " + out.strip().replace("\n", "\n    ")[:800])
+
     if not Path(FREECADCMD).exists():
         print(f"!! freecadcmd not found at {FREECADCMD} "
               f"(set FREECAD_MCP_FREECAD_BIN)")

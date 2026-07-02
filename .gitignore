@@ -12,6 +12,18 @@ __pycache__/
 # Local, machine-specific Claude Code settings
 .claude/settings.local.json
 
+# Secrets — never commit (cyber / NF5 / §13). Defense in depth.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+credentials.json
+secrets.*
+*.secret
+
 # Per-project runtime artifacts from the home-grown layers (keep the dirs, not the data)
 /project_state/*.json
 /checkpoints/*.FCStd

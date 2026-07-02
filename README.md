@@ -53,6 +53,7 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 |---|---|---|
 | Core | Parametric modeling: sketch · Pad/Pocket · spreadsheet-driven variants (loop proven) | ✅ |
 | Robustness | Project memory · geometric verification · checkpoints/rollback | ✅ |
+| Security | localhost-only RPC · no-secrets scan · trust model ([SECURITY.md](SECURITY.md)) | ✅ |
 | Onboarding | One-command cross-platform installer; Claude Code + Desktop | ✅ |
 | Rocketry | Rocket WB graft — nose/body/fins · Barrowman CP & stability | ✅ |
 | Aero | AirPlaneDesign graft — NACA airfoils, fuselage profiles | ✅ |
@@ -65,7 +66,7 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 Domain knowledge lives in [`skills/`](skills) — `skill-partdesign`, `skill-rocket`, `skill-drone`,
 `skill-print3d`, `skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-robotics-ros`,
 `skill-verify` — loaded on demand to keep token cost low. The full suite
-(`python install/run_all_tests.py`) is **19/19**; a core subset also runs in CI
+(`python install/run_all_tests.py`) is **20/20**; a core subset also runs in CI
 ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
 
 ## Repository layout
