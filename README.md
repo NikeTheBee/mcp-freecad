@@ -4,6 +4,14 @@ Design mechanical, aero & robotics projects in **FreeCAD** using **natural langu
 
 > Describe intent ("a 450mm quad frame with foldable arms", "a 3-fin rocket with an ogive nose"); the AI models it, verifies the geometry, checkpoints progress, and prepares it for fabrication.
 
+## Project goal: local-first AI CAD
+The end goal of this project is **CAD modeling driven by LOCAL AI models** — everything running on
+your own machine, no cloud dependency. That is why the architecture is built on **MCP**, an open
+protocol: any MCP-capable agent runner with a local LLM can drive it, today or tomorrow.
+Frontier models (e.g. Claude Code) are currently ahead of local models on long tool-use sessions,
+so they are used **in the meantime** as the reference client — but nothing here is tied to them.
+When local models catch up, you swap the client and keep the whole stack (server, skills, layers).
+
 ## How it works
 ```
 You (natural language)
@@ -77,6 +85,7 @@ also runs as a core subset in CI ([.github/workflows/tests.yml](.github/workflow
 - `install/` — install guides + test suite · `project_state/`, `checkpoints/` — runtime data (gitignored)
 
 ## License
-[MIT](LICENSE) © 2026 NikeTheBee — free to use, but **attribution is required**: keep the copyright
-notice and credit this project and its author. See [`CREDITS.md`](CREDITS.md) for the third-party
-projects this builds on (FreeCAD and the grafted workbenches are LGPL-2.1 and are not vendored here).
+[CC BY-NC 4.0](LICENSE) © 2026 NikeTheBee — everyone is free to **download, modify and share** this
+project, under two conditions: **attribution is mandatory** (credit NikeTheBee AND the third-party
+projects listed in [`CREDITS.md`](CREDITS.md)), and **no commercial use** without prior written
+permission. FreeCAD and the grafted workbenches keep their own licenses (LGPL-2.1, not vendored here).

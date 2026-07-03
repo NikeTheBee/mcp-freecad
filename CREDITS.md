@@ -15,4 +15,6 @@ and copyrights belong to their respective authors.
 
 The original design specification for this system is in [`docs/CAHIER_DES_CHARGES.md`](docs/CAHIER_DES_CHARGES.md).
 
-If you use this project, attribution is appreciated — see [`LICENSE`](LICENSE).
+If you use, modify or redistribute this project, **attribution is required** (CC BY-NC 4.0):
+credit **NikeTheBee** and keep this credits file — see [`LICENSE`](LICENSE). Commercial use
+requires prior written permission from the author.

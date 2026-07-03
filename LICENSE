@@ -1,29 +1,41 @@
-MIT License
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
 
 Copyright (c) 2026 NikeTheBee
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This work — the MCP FREECAD project: its code, skills, documentation and
+specifications — is licensed under the Creative Commons
+Attribution-NonCommercial 4.0 International License.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+You are free to:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+  Share    — copy and redistribute the material in any medium or format.
+  Adapt    — remix, transform, and build upon the material.
 
----
+Under the following terms:
 
-This project integrates and is built on third-party open-source software that
-is NOT vendored into this repository (cloned at install time). See CREDITS.md
-for the full list and their respective licenses (notably FreeCAD and the
-grafted workbenches, which are LGPL-2.1). Attribution to the projects listed in
-CREDITS.md, and to this project's author, is required when reusing this work.
+  Attribution   — You MUST give appropriate credit to the original author
+                  (NikeTheBee, https://github.com/NikeTheBee/mcp-freecad),
+                  provide a link to this license, and indicate if changes
+                  were made. You must also retain the third-party credits
+                  listed in CREDITS.md: this project builds on FreeCAD,
+                  blwfish/freecad-mcp, the Rocket / AirPlaneDesign / CROSS
+                  workbenches and the MCP SDK, whose own licenses
+                  (LGPL-2.1, MIT) continue to apply to those projects.
+
+  NonCommercial — You may NOT use the material for commercial purposes.
+                  Any commercial use requires prior written permission
+                  from the author.
+
+  No additional restrictions — You may not apply legal terms or
+                  technological measures that legally restrict others from
+                  doing anything the license permits.
+
+Full license text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+Note on third-party components: nothing in this repository relicenses the
+third-party projects it drives. They are cloned at install time (not
+vendored) and remain under their original licenses — see CREDITS.md.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY ARISING FROM THE USE OF THE WORK.
