@@ -54,20 +54,21 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 | Core | Parametric modeling: sketch · Pad/Pocket · spreadsheet-driven variants (loop proven) | ✅ |
 | Robustness | Project memory · geometric verification · checkpoints/rollback | ✅ |
 | Security | localhost-only RPC · no-secrets scan · trust model ([SECURITY.md](SECURITY.md)) | ✅ |
-| Onboarding | One-command cross-platform installer; Claude Code + Desktop | ✅ |
+| Onboarding | One-command cross-platform installer; Claude Code + Desktop; FreeCAD auto-started by the bridge (zero manual steps) | ✅ |
 | Rocketry | Rocket WB graft — nose/body/fins · Barrowman CP & stability | ✅ |
 | Aero | AirPlaneDesign graft — NACA airfoils, fuselage profiles | ✅ |
 | Fabrication | STL (watertight-gated) · mesh repair · STEP/IGES exchange | ✅ |
-| Analysis | FEM (CalculiX, ships with FreeCAD) | ✅ setup |
+| Analysis | FEM (CalculiX, ships with FreeCAD) · drone sizing (momentum theory: T/W, hover power, endurance) | ✅ setup |
+| Memory | Resume a project across sessions from state alone — runnable proof: [examples/resume_between_sessions.py](examples/resume_between_sessions.py) | ✅ |
 | Mechanism | Assemblies · spur gears · fillet/chamfer/holes/patterns · fits & tolerances | ✅ |
-| Robotics | URDF/xacro export + full ament_cmake ROS2 package (CROSS graft, no ROS2 needed) | ✅ |
+| Robotics | URDF/xacro export + full ament_cmake ROS2 package (CROSS graft, no ROS2 needed) · ros2_control/sensors/Gazebo-Sim tags + controllers YAML | ✅ |
 | CAM · CFD · Gazebo sim | G-code · OpenFOAM · ROS2 simulation | needs FreeCAD 1.2-dev / external runtimes |
 
 Domain knowledge lives in [`skills/`](skills) — `skill-partdesign`, `skill-rocket`, `skill-drone`,
 `skill-print3d`, `skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-robotics-ros`,
-`skill-verify` — loaded on demand to keep token cost low. The full suite
-(`python install/run_all_tests.py`) is **20/20**; a core subset also runs in CI
-([.github/workflows/tests.yml](.github/workflows/tests.yml)).
+`skill-verify`, `skill-cfd` (external-OpenFOAM fallback), `skill-cam` (1.2-dev status stub) —
+loaded on demand to keep token cost low. The full suite (`python install/run_all_tests.py`)
+also runs as a core subset in CI ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
 
 ## Repository layout
 - `CLAUDE.md` — short, loaded each session · `docs/` — full spec (cahier des charges)

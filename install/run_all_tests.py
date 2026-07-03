@@ -43,12 +43,15 @@ CORE_TESTS = [
     ("tolerances_test.py", "TOLERANCES_OK"),
     ("mesh_repair_test.py", "MESH_REPAIR_OK"),
     ("urdf_package_test.py", "URDF_PACKAGE_OK"),
+    ("urdf_control_test.py", "URDF_CONTROL_OK"),
     ("rocket_cp_test.py", "ROCKET_CP_OK"),
+    ("drone_aero_test.py", "DRONE_AERO_OK"),
     ("layers_test.py", "LAYERS_TEST_OK"),
     ("print3d_test.py", "PRINT3D_OK"),
     ("exchange_test.py", "EXCHANGE_OK"),
     ("fem_test.py", "FEM_OK"),
     ("memory_recovery_test.py", "MEMORY_RECOVERY_OK"),
+    ("../examples/resume_between_sessions.py", "RESUME_DEMO_OK"),
     ("assembly_test.py", "ASSEMBLY_OK"),
     ("gear_test.py", "GEAR_OK"),
 ]
@@ -80,6 +83,17 @@ def main() -> int:
     print(f"[{'PASS' if passed else 'FAIL'}] security_scan.py")
     if not passed:
         print("    " + out.strip().replace("\n", "\n    ")[:800])
+
+    # Autostart / R10 test — system Python; also boots the headless server so
+    # the live phase1/mcp-loop tests below run instead of being skipped.
+    # Skipped in CI (MCPFC_SKIP_GRAFTS) where no real FreeCAD install exists.
+    if not os.environ.get("MCPFC_SKIP_GRAFTS"):
+        ok, out = _run([sys.executable, str(HERE / "autostart_test.py")])
+        passed = ok and "AUTOSTART_OK" in out
+        results.append(("autostart_test.py", passed))
+        print(f"[{'PASS' if passed else 'FAIL'}] autostart_test.py")
+        if not passed:
+            print("    " + out.strip().replace("\n", "\n    ")[:800])
 
     if not Path(FREECADCMD).exists():
         print(f"!! freecadcmd not found at {FREECADCMD} "

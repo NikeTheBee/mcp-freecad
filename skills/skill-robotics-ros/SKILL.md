@@ -51,10 +51,23 @@ To hand off to a ROS2 workspace, emit an `ament_cmake` package
 `robot_state_publisher`/`rviz2` deps) + `CMakeLists.txt` (installs `urdf/` + `launch/`) +
 `urdf/<pkg>.urdf`. No ROS2 runtime needed to *generate* it; `colcon build` it later in a workspace.
 
+## ros2_control · sensors · Gazebo (generation only — §4.2)
+`server/freecad_layers/urdf_aug.py` augments the bare `<robot>` element for ROS 2 Humble+ /
+modern **Gazebo Sim** (`gz_ros2_control`, not Gazebo Classic):
+```python
+from freecad_layers import urdf_aug
+urdf_aug.add_ros2_control(robot, ["shoulder", "elbow"])          # command/state interfaces
+urdf_aug.add_gazebo_ros2_control_plugin(robot, "$(find my_bot)/config/controllers.yaml")
+urdf_aug.add_imu(robot, "base_link"); urdf_aug.add_camera(robot, "head_link")
+urdf_aug.add_lidar(robot, "base_link")
+yaml_text = urdf_aug.controllers_yaml(["shoulder", "elbow"])     # ros2_controllers config
+print(urdf_aug.verdict(robot))                                   # compact check
+```
+Ship the YAML as `config/controllers.yaml` inside the ROS2 package (§ above). *Running* the
+sim still needs a ROS2+Gazebo install — we generate, the workspace consumes (§12).
+
 ## Verify
 Assert the output contains `<robot`, each `<link>`, `<visual>/<collision>`, and the expected `<box size=>`
 / `<joint>`; and that the package files are valid XML. Runnable examples:
-`install/robotics_urdf_test.py` (URDF) and `install/urdf_package_test.py` (full package).
-
-> ROS2/Gazebo deferred: spinning up `ros2_control`, Gazebo sim, or MoveIt needs a ROS2 install — export
-> the URDF here, consume it in a ROS2 workspace.
+`install/robotics_urdf_test.py` (URDF), `install/urdf_package_test.py` (full package),
+`install/urdf_control_test.py` (ros2_control/sensors/Gazebo augmentation).
