@@ -34,6 +34,17 @@ wire = Part.makePolygon(coords)        # or Part.BSplineCurve().interpolate(coor
 obj = doc.addObject("Part::Feature", "Airfoil"); obj.Shape = wire; doc.recompute()
 ```
 
+## Sizing & performance (analytical — no CFD)
+`server/freecad_layers/aero.py`: hover thrust/power (momentum theory), thrust-to-weight,
+disk loading, endurance, tip Mach, wing loading, stall speed. One-line verdicts:
+```python
+import sys; sys.path.insert(0, r"<repo>\server")
+from freecad_layers import aero
+aero.verdict_multirotor(mass_kg=1.2, n_motors=4, prop_diameter_m=0.254,
+                        max_thrust_per_motor_n=8.0, battery_wh=55.5)
+```
+For actual flow analysis (drag/lift), load `skill-cfd` (external OpenFOAM workflow).
+
 ## Verify
 `obj.Shape.isValid()`, `len(obj.Shape.Edges)`, `obj.Shape.Length`, `obj.Shape.BoundBox`.
-Runnable end-to-end example: `install/drone_graft_test.py`.
+Runnable end-to-end examples: `install/drone_graft_test.py`, `install/drone_aero_test.py`.
