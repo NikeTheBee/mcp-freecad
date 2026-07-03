@@ -303,15 +303,23 @@ Chargé **chaque** session → budget strict < ~150 lignes. Contenu cible :
 
 ---
 
-## 15. Décisions ouvertes (à trancher)
+## 15. Décisions ouvertes — TRANCHÉES (mise à jour 2026-07-03)
 
-| # | Décision | Impact |
+| # | Décision | Choix retenu |
 |---|---|---|
-| D1 | OS principal | chemins, install, headless |
-| D2 | Licence finale | compat dépendances |
-| D3 | Génération image→3D incluse ? | besoin GPU |
-| D4 | `project_state` public ou privé | confidentialité projets |
-| D5 | Niveau CAM visé (besoin 1.2-dev ?) | stabilité vs fonctionnalités |
+| D1 | OS principal | **Windows** (validé bout-en-bout ; architecture multi-OS, Linux/macOS non testés) |
+| D2 | Licence finale | **MIT** — possible car ni la base ni les workbenches (LGPL) ne sont vendorisés : ils sont clonés à l'install (voir CREDITS.md) |
+| D3 | Génération image→3D incluse ? | **Non** (hors MVP, GPU requis) |
+| D4 | `project_state` public ou privé | **Privé** (gitignoré ; contient les projets de l'utilisateur) |
+| D5 | Niveau CAM visé | **Différé à FreeCAD 1.2** ; en attendant, repli STEP/STL (`skill-cam` documente la conduite à tenir) |
+
+### 15.1 Divergences assumées vs cette spécification
+Voir `docs/ROADMAP.md` (audit détaillé). Résumé :
+- `skill-cfd` livré comme **workflow de repli** (§12 : analytique interne + export vers OpenFOAM
+  externe), pas comme CFD interne ; `skill-cam` livré comme **stub** documentant la limite 1.2-dev.
+- Deux skills non prévus ajoutés : `skill-exchange` (STEP/IGES) et `skill-gear` (engrenages).
+- Robotique : greffe **CROSS** retenue (URDF/xacro sans runtime ROS2) au lieu de RobotCAD.
+- R10 (spawn Windows) corrigé par patch maison : FreeCAD est auto-démarré par le bridge.
 
 ---
 
