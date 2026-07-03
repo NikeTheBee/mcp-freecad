@@ -15,15 +15,14 @@ AI-piloted FreeCAD (natural language → parametric CAD/robotics), via MCP, on W
 - Run a script headless: `A:\FreeCAD\bin\freecadcmd.exe <script.py>`
 - Check MCP server health: `claude mcp list` / `claude mcp get freecad`
 
-## Ensure FreeCAD is running (do this before the first freecad tool call)
-The `freecad` tools need a FreeCAD instance on `localhost:23456`. **At session start, call
-`check_freecad_connection`; if it reports none, auto-start the headless server in the BACKGROUND**
-(Bash `run_in_background`, do not block), then poll until `:23456` is open:
-`"A:\FreeCAD\bin\freecadcmd.exe" "%APPDATA%\FreeCAD\Mod\AICopilot\headless_server.py"`
-Do this for the user automatically — don't ask them to launch anything. User-facing fallback if the
-bridge misbehaves: the desktop shortcut "Demarrer FreeCAD pour Claude" (runs `start-freecad-server.bat`).
-NB: the bridge's `spawn_freecad_instance` is broken on Windows (Unix-socket assumption) — use the
-background launch above, not that tool. See `docs/COMPATIBILITY.md` R10.
+## FreeCAD startup is automatic (R10 fixed)
+The bridge auto-starts FreeCAD headless whenever `localhost:23456` is down — on the first tool
+call, on `check_freecad_connection`, or via `spawn_freecad_instance` (patch:
+`install/apply_bridge_patches.py`, applied by bootstrap). Just call `check_freecad_connection`
+at session start; expect a one-time ~10–30 s cold start. Never launch FreeCAD manually.
+User-facing fallback if the bridge misbehaves: desktop shortcut "Demarrer FreeCAD pour Claude"
+(`start-freecad-server.bat`). Disable autostart with `FREECAD_MCP_AUTOSTART=0`. See
+`docs/COMPATIBILITY.md` R10.
 - Re-register / full install: `python install/bootstrap.py [--with-grafts]` (idempotent, cross-platform).
 - Run all tests: `python install/run_all_tests.py` (grafts, layers, socket smoke, MCP-protocol loop).
 
@@ -49,6 +48,6 @@ User (natural language) → Claude Code → MCP `freecad` server (stdio)
 
 ## Pointers
 - Full spec: `@docs/CAHIER_DES_CHARGES.md` · Compatibility audit: `@docs/COMPATIBILITY.md` · Security: `@SECURITY.md`
-- Domain knowledge: `/skills/<domain>/SKILL.md` — load on demand. Available: `skill-partdesign` (core sketch/Pad/Pocket + spreadsheet variants), `skill-rocket` (Rocketry WB), `skill-drone` (AirPlaneDesign WB), `skill-verify` (home-grown layers), `skill-print3d` (STL export), `skill-fem` (CalculiX FEM), `skill-exchange` (STEP/IGES), `skill-assembly` (multi-part assemblies), `skill-gear` (involute spur gears), `skill-robotics-ros` (CROSS URDF export).
+- Domain knowledge: `/skills/<domain>/SKILL.md` — load on demand. Available: `skill-partdesign` (core sketch/Pad/Pocket + spreadsheet variants), `skill-rocket` (Rocketry WB), `skill-drone` (AirPlaneDesign WB), `skill-verify` (home-grown layers), `skill-print3d` (STL export), `skill-fem` (CalculiX FEM), `skill-exchange` (STEP/IGES), `skill-assembly` (multi-part assemblies), `skill-gear` (involute spur gears), `skill-robotics-ros` (CROSS URDF export + ros2_control/Gazebo), `skill-cfd` (analytical aero + external-OpenFOAM fallback), `skill-cam` (CAM status: wait for 1.2).
 - Home-grown layers (§7): `server/freecad_layers/` — `state` (project memory), `verify` (geometry checks), `checkpoint` (rollback). See `skill-verify`.
 - Project memory data: `/project_state/state.json` · Checkpoints: `/checkpoints/*.FCStd` (runtime artifacts, gitignored)

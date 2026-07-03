@@ -126,6 +126,11 @@ def install_base(freecadcmd: Path, moddir: Path, dry: bool) -> None:
                 shutil.copy2(base / f, BRIDGE_DIR / f)
         # AICopilot is also needed next to the bridge for headless spawning
         copy_tree(base / "AICopilot", BRIDGE_DIR / "AICopilot", dry)
+        # First-party bridge patches (Windows TCP autostart — R10); idempotent.
+        sys.path.insert(0, str(REPO / "install"))
+        from apply_bridge_patches import apply as _apply_patches
+        if _apply_patches(BRIDGE_DIR) != 0:
+            log("WARNING: bridge patches failed to apply (see above)")
 
 
 def pip_install(python: Path, dry: bool) -> None:
