@@ -1,0 +1,24 @@
+MCP FREECAD — NOTICE
+====================
+
+Copyright (c) 2026 NikeTheBee
+https://github.com/NikeTheBee/mcp-freecad
+
+This project is licensed under the Creative Commons
+Attribution-NonCommercial 4.0 International license (see LICENSE, or
+https://creativecommons.org/licenses/by-nc/4.0/).
+
+In plain words:
+
+  * Everyone is free to DOWNLOAD, MODIFY and SHARE this project.
+  * ATTRIBUTION IS MANDATORY: credit the original author (NikeTheBee,
+    link above), indicate changes, and RETAIN THE THIRD-PARTY CREDITS
+    listed in CREDITS.md (FreeCAD, blwfish/freecad-mcp, Rocket,
+    AirPlaneDesign and CROSS workbenches, MCP SDK).
+  * NO COMMERCIAL USE without prior written permission from the author.
+
+Third-party components are NOT relicensed by this project: they are
+cloned at install time (never vendored here) and keep their own
+licenses (LGPL-2.1, MIT) — see CREDITS.md.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.

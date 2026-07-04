@@ -1,5 +1,10 @@
 # MCP FREECAD
 
+[![Tests](https://github.com/NikeTheBee/mcp-freecad/actions/workflows/tests.yml/badge.svg)](https://github.com/NikeTheBee/mcp-freecad/actions/workflows/tests.yml)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC_BY--NC_4.0-lightgrey.svg)](LICENSE)
+[![FreeCAD 1.1](https://img.shields.io/badge/FreeCAD-1.1.x-red.svg)](https://www.freecad.org)
+🇫🇷 [Version française](README.fr.md)
+
 Design mechanical, aero & robotics projects in **FreeCAD** using **natural language** — no manual coding — through any AI client that speaks **MCP**. Built for minimal token cost and long, robust design sessions.
 
 > Describe intent ("a 450mm quad frame with foldable arms", "a 3-fin rocket with an ogive nose"); the AI models it, verifies the geometry, checkpoints progress, and prepares it for fabrication.
@@ -61,7 +66,7 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 |---|---|---|
 | Core | Parametric modeling: sketch · Pad/Pocket · spreadsheet-driven variants (loop proven) | ✅ |
 | Robustness | Project memory · geometric verification · checkpoints/rollback | ✅ |
-| Security | localhost-only RPC · no-secrets scan · trust model ([SECURITY.md](SECURITY.md)) | ✅ |
+| Security | localhost-only RPC · **shared-token socket auth** · no-secrets scan · trust model ([SECURITY.md](SECURITY.md)) | ✅ |
 | Onboarding | One-command cross-platform installer; Claude Code + Desktop; FreeCAD auto-started by the bridge (zero manual steps) | ✅ |
 | Rocketry | Rocket WB graft — nose/body/fins · Barrowman CP & stability | ✅ |
 | Aero | AirPlaneDesign graft — NACA airfoils, fuselage profiles | ✅ |
@@ -88,4 +93,5 @@ also runs as a core subset in CI ([.github/workflows/tests.yml](.github/workflow
 [CC BY-NC 4.0](LICENSE) © 2026 NikeTheBee — everyone is free to **download, modify and share** this
 project, under two conditions: **attribution is mandatory** (credit NikeTheBee AND the third-party
 projects listed in [`CREDITS.md`](CREDITS.md)), and **no commercial use** without prior written
-permission. FreeCAD and the grafted workbenches keep their own licenses (LGPL-2.1, not vendored here).
+permission. Human-readable summary: [`NOTICE`](NOTICE). FreeCAD and the grafted workbenches keep
+their own licenses (LGPL-2.1, not vendored here).
