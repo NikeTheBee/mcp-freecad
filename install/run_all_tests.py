@@ -87,7 +87,7 @@ def main() -> int:
     results.append(("security_scan.py", passed))
     print(f"[{'PASS' if passed else 'FAIL'}] security_scan.py")
     if not passed:
-        print("    " + out.strip().replace("\n", "\n    ")[:800])
+        print("    " + out.strip().replace("\n", "\n    ")[-1200:])
 
     # Autostart / R10 test — system Python; also boots the headless server so
     # the live phase1/mcp-loop tests below run instead of being skipped.
@@ -100,7 +100,7 @@ def main() -> int:
             results.append((script, passed))
             print(f"[{'PASS' if passed else 'FAIL'}] {script}")
             if not passed:
-                print("    " + out.strip().replace("\n", "\n    ")[:800])
+                print("    " + out.strip().replace("\n", "\n    ")[-1200:])
 
     if not Path(FREECADCMD).exists():
         print(f"!! freecadcmd not found at {FREECADCMD} "
@@ -113,7 +113,7 @@ def main() -> int:
         results.append((script, passed))
         print(f"[{'PASS' if passed else 'FAIL'}] {script}")
         if not passed:
-            print("    " + out.strip().replace("\n", "\n    ")[:800])
+            print("    " + out.strip().replace("\n", "\n    ")[-1200:])
 
     # Phase 1 smoke test needs the live socket server
     if _port_open():
@@ -122,7 +122,7 @@ def main() -> int:
         results.append(("phase1_smoke_test.py", passed))
         print(f"[{'PASS' if passed else 'FAIL'}] phase1_smoke_test.py")
         if not passed:
-            print("    " + out.strip().replace("\n", "\n    ")[:800])
+            print("    " + out.strip().replace("\n", "\n    ")[-1200:])
     else:
         print("[SKIP] phase1_smoke_test.py (no server on localhost:23456 — "
               "start the 'freecad-headless' server first)")
@@ -136,7 +136,7 @@ def main() -> int:
         results.append(("mcp_loop_test.py", passed))
         print(f"[{'PASS' if passed else 'FAIL'}] mcp_loop_test.py")
         if not passed:
-            print("    " + out.strip().replace("\n", "\n    ")[:800])
+            print("    " + out.strip().replace("\n", "\n    ")[-1200:])
     else:
         print("[SKIP] mcp_loop_test.py (needs the `mcp` SDK and a server on :23456)")
 

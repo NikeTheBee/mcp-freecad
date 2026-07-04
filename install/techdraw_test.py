@@ -101,6 +101,12 @@ def main() -> int:
 
 
 # No __main__ guard: freecadcmd executes scripts with a different __name__.
-rc = main()
+# Surface any crash on stdout: some CI runners drown stderr in banner noise.
+try:
+    rc = main()
+except Exception:
+    import traceback
+    print("TECHDRAW_CRASH:\n" + traceback.format_exc())
+    rc = 1
 if rc:
     sys.exit(rc)
