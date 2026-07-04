@@ -23,7 +23,7 @@ jobs:
           environment-name: fc
           create-args: >-
             python=3.11
-            freecad=1.0
+            freecad=1.1
 
       - name: Run core test suite
         shell: bash -el {0}
