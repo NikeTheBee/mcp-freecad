@@ -12,7 +12,7 @@
 | Skills | 10 skills (partdesign, rocket, drone, verify, print3d, fem, exchange, assembly, gear, robotics-ros) | §9 |
 | Install | `install/bootstrap.py` idempotent multi-OS, grafts épinglés | §11 Phase 0 |
 | Tests | `install/run_all_tests.py` 20/20 + CI (subset core) | §13 CI |
-| Publication | Repo public GitHub, README, LICENSE MIT, CREDITS, SECURITY | §13, Phase 5 |
+| Publication | Repo public GitHub, README, LICENSE CC BY-NC 4.0, CREDITS, SECURITY | §13, Phase 5 |
 | Robustesse | Capture crash OCCT (base), audit compat R1–R10 | NF2, §6.2 |
 | Token-minimal | CLAUDE.md court, texte-seul par défaut, outils nommés | §8 |
 | Rocketry | Rocket WB + stabilité Barrowman (CP, marge statique) | §4.3 |
@@ -25,8 +25,8 @@
 |---|---|---|---|
 | DV1 | `skill-cfd` / `skill-cam` absents, remplacés par `skill-exchange` / `skill-gear` | CAM exige FreeCAD 1.2-dev ; CFD exige OpenFOAM externe | à retranscrire dans le CDC (tâche D) |
 | DV2 | CROSS greffé au lieu de RobotCAD | CROSS suffit pour URDF/xacro sans runtime ROS2 | à retranscrire (D) |
-| DV3 | Licence MIT au lieu de LGPL/GPL anticipée | rien n'est vendorisé (base et grafts clonés à l'install) | à retranscrire (D) |
-| DV4 | Décisions ouvertes §15 tranchées de facto : D1=Windows, D2=MIT, D3=non (pas d'image→3D), D4=privé (gitignoré), D5=CAM différé à 1.2 | — | à retranscrire (D) |
+| DV3 | Licence CC BY-NC 4.0 au lieu de LGPL/GPL anticipée (initialement MIT, durci le 2026-07-03 : citation obligatoire, pas de commercial) | rien n'est vendorisé (base et grafts clonés à l'install) | retranscrit (CDC §15) |
+| DV4 | Décisions ouvertes §15 tranchées de facto : D1=Windows, D2=CC BY-NC 4.0, D3=non (pas d'image→3D), D4=privé (gitignoré), D5=CAM différé à 1.2 | — | retranscrit (CDC §15) |
 
 ## 3. Points faibles / manquant
 
