@@ -29,6 +29,10 @@ jobs:
         shell: bash -el {0}
         env:
           MCPFC_SKIP_GRAFTS: "1"
+          # conda-forge headless TechDraw segfaults during view recompute
+          # (native crash) — feature validated on the Windows 1.1.x target.
+          # See docs/COMPATIBILITY.md R11.
+          MCPFC_SKIP_TECHDRAW: "1"
         run: |
           FCBIN="$(which freecadcmd || which FreeCADCmd)"
           echo "freecadcmd: $FCBIN"

@@ -28,6 +28,8 @@ Target: **FreeCAD 1.1.1** (current stable, released 2026-03-25). Last reviewed: 
 | R9 | `Support` → `AttachmentSupport` rename (done in 1.0) | breaks sketch-attachment scripts on <1.0 | **N/A** — our sketches use the default plane; if you add attachment, use `AttachmentSupport` (1.0+). |
 | R10 | Base bridge `spawn_freecad_instance` is Unix-socket-only (`/tmp/*.sock`) | the bridge can't auto-launch FreeCAD on Windows (rejects the `A:\tmp` path) | **Fixed** — first-party autostart patch (`install/apply_bridge_patches.py` + `server/bridge_patches/freecad_autostart.py`, applied by `bootstrap.py`): on Windows the bridge launches `freecadcmd headless_server.py` itself whenever `localhost:23456` is down (on connection failure, on `check_freecad_connection`, and `spawn_freecad_instance` now delegates to it). Disable with `FREECAD_MCP_AUTOSTART=0`. `start-freecad-server.bat` remains as manual fallback. Regression test: `install/autostart_test.py`. |
 
+| R11 | conda-forge Linux **headless TechDraw segfaults** during view/dimension recompute (native crash, no traceback) | `techdraw_test` kills the CI process | **Worked around** — CI sets `MCPFC_SKIP_TECHDRAW=1` (targeted skip; everything else still runs). Feature fully validated on the Windows 1.1.1 target. Re-test on each conda FreeCAD bump; drop the skip when it stops crashing. |
+
 ## Upgrade checklist (when moving FreeCAD versions)
 1. Set `FREECAD_MCP_FREECAD_BIN` to the new `freecadcmd` (or put it on PATH).
 2. Re-run `python install/bootstrap.py --with-grafts` (resolves the new versioned Mod dir, re-registers).
