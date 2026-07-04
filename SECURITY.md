@@ -30,6 +30,17 @@ grafts). That is powerful **by design** (it's how natural-language CAD works) an
   TLS) in front — NF5. The token protects against local callers, not network eavesdropping.
 - For remote/multi-machine use, tunnel over SSH rather than exposing the port.
 
+## Secure-by-design rule for first-party code
+Every new layer/helper is written secure **from the first commit** — security is never retrofitted.
+Concretely, all first-party code that touches files or caller-supplied names goes through the shared
+gates in `server/freecad_layers/__init__.py`:
+- **`safe_out_path(path, exts, overwrite)`** — every file WRITE: resolved path, enforced extension
+  (a "gears.dxf" request can never write "evil.dll"), and no silent clobber (explicit `overwrite=True`).
+- **`safe_under(base, candidate)`** — every caller-supplied name that must map into a known directory
+  (template names, checkpoint labels): anti path-traversal (`..\\..` cannot escape `base`).
+The policy lives in ONE place; extend it there, not locally. Tests must exercise the refusal paths
+(traversal rejected, clobber rejected), not only the happy path.
+
 ## Secrets
 - **Never commit secrets.** `.gitignore` blocks `.env*`, `*.pem`, `*.key`, `id_rsa*`, `credentials.json`,
   `secrets.*`, etc.
