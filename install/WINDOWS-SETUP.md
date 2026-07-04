@@ -11,8 +11,8 @@ Done on this machine:
    override for the non-default FreeCAD install path:
    ```
    claude mcp add -s user freecad -e FREECAD_MCP_FREECAD_BIN="A:\FreeCAD\bin\freecadcmd.exe" -- \
-     "C:\Users\Administrateur\AppData\Local\Programs\Python\Python313\python.exe" \
-     "C:\Users\Administrateur\.freecad-mcp\freecad_mcp_server.py"
+     "%LocalAppData%\Programs\Python\Python313\python.exe" \
+     "%USERPROFILE%\.freecad-mcp\freecad_mcp_server.py"
    ```
 6. Verified with `claude mcp get freecad` → status `Connected`.
 7. Verified FreeCAD itself headless (`freecadcmd.exe`) creates and recomputes geometry correctly

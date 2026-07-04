@@ -31,3 +31,6 @@ secrets.*
 
 # Runtime output of examples/resume_between_sessions.py
 /examples/demo_state/
+
+# Machine-local Claude Code launcher config (absolute user paths)
+/.claude/launch.json
