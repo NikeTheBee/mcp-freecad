@@ -12,13 +12,22 @@ grafts). That is powerful **by design** (it's how natural-language CAD works) an
 - Run untrusted third-party workbench code (grafts) only after vetting — see how Rocket/AirPlaneDesign/CROSS
   were reviewed before use (`install/WINDOWS-SETUP.md`).
 
-## Network exposure
+## Network exposure & socket authentication
 - The FreeCAD socket server binds **`localhost:23456` only** (Windows TCP) / a **filesystem Unix socket**
   (macOS/Linux). It is **not** reachable from the network. Verified: `WINDOWS_HOST = "localhost"` in
   `freecad_mcp_handler.py`; there is **no** `0.0.0.0` bind.
-- **Never** change the bind to `0.0.0.0` / a LAN IP without putting an **IP allowlist** (and ideally auth +
-  TLS) in front — NF5. The socket has **no authentication**; anything that can reach the port can drive
-  FreeCAD. Localhost-only keeps that to local processes.
+- **Shared-secret authentication (NF5 hardening):** every command on the socket must carry an
+  `"auth"` token matching `~/.freecad-mcp/auth_token` (generated on first use, owner-only perms;
+  constant-time comparison). The bridge attaches it automatically; unauthenticated or wrong-token
+  commands are rejected before dispatch. This protects against **other local processes/users**
+  reaching the loopback port — the level a localhost bind alone cannot give you.
+  - Patch source: `server/bridge_patches/mcp_auth.py`, applied to the bridge and every deployed
+    AICopilot copy by `install/apply_bridge_patches.py` (run by `bootstrap.py`).
+  - Regression test: `install/auth_test.py` (reject no-token, reject wrong-token, accept token).
+  - Rotate: delete the token file, restart FreeCAD + the bridge. Emergency escape hatch:
+    `FREECAD_MCP_NO_AUTH=1` (both sides) — not recommended.
+- **Never** change the bind to `0.0.0.0` / a LAN IP without putting an **IP allowlist** (and ideally
+  TLS) in front — NF5. The token protects against local callers, not network eavesdropping.
 - For remote/multi-machine use, tunnel over SSH rather than exposing the port.
 
 ## Secrets
@@ -38,5 +47,6 @@ grafts). That is powerful **by design** (it's how natural-language CAD works) an
   can't silently change behavior — see `docs/COMPATIBILITY.md` R3.
 
 ## Reporting
-This is a personal/educational project (private repo). If you fork it and find an issue, open an issue on
-your fork or contact the maintainer.
+This is a personal/educational project. If you find a security issue, open a GitHub issue on
+[NikeTheBee/mcp-freecad](https://github.com/NikeTheBee/mcp-freecad) (or contact the maintainer
+privately first for anything sensitive).

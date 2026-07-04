@@ -17,6 +17,7 @@ Exit 0 = patched or already patched; exit 1 = an anchor no longer matches
 """
 from __future__ import annotations
 
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -42,6 +43,29 @@ except ImportError:  # module deployed by install/apply_bridge_patches.py
     _win_ensure_freecad = None
 # -----------------------------------------------------------------------------
 """,
+    ),
+    (
+        "P6a-auth-import",
+        """except ImportError:  # module deployed by install/apply_bridge_patches.py
+    _win_tcp_alive = None
+    _win_ensure_freecad = None""",
+        """except ImportError:  # module deployed by install/apply_bridge_patches.py
+    _win_tcp_alive = None
+    _win_ensure_freecad = None
+try:  # NF5 patch: shared-secret auth for the FreeCAD socket
+    import mcp_auth as _mcp_auth
+except ImportError:
+    _mcp_auth = None""",
+    ),
+    (
+        "P6b-auth-attach",
+        """            # Send command with length-prefixed protocol (v2.1.1)
+            command = json.dumps({"tool": tool_name, "args": args})""",
+        """            # Send command with length-prefixed protocol (v2.1.1)
+            _cmd = {"tool": tool_name, "args": args}
+            if _mcp_auth is not None:  # NF5 patch: attach shared-secret token
+                _mcp_auth.attach(_cmd)
+            command = json.dumps(_cmd)""",
     ),
     (
         "P2-honest-availability",
@@ -113,34 +137,106 @@ except ImportError:  # module deployed by install/apply_bridge_patches.py
 ]
 
 
+# Patches for the FreeCAD-side handler (AICopilot/freecad_mcp_handler.py):
+# require the shared token on every incoming command (NF5).
+HANDLER_PATCHES = [
+    (
+        "HA-auth-import",
+        "from typing import Dict, Any, Optional\n",
+        """from typing import Dict, Any, Optional
+
+# --- MCP FREECAD project patch (NF5): shared-secret socket auth --------------
+try:
+    import mcp_auth as _mcp_auth
+except ImportError:  # robust fallback: load from this file's directory
+    try:
+        import importlib.util as _ilu
+        _p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mcp_auth.py")
+        _spec = _ilu.spec_from_file_location("mcp_auth", _p)
+        _mcp_auth = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mcp_auth)
+    except Exception:
+        _mcp_auth = None
+# -----------------------------------------------------------------------------
+""",
+    ),
+    (
+        "HB-auth-check",
+        """            command = json.loads(command_str)
+            tool_name = command.get("tool", "")""",
+        """            command = json.loads(command_str)
+            if _mcp_auth is not None and not _mcp_auth.check_command(command):
+                return json.dumps({"error": "unauthorized: missing or invalid "
+                                   "auth token (~/.freecad-mcp/auth_token; see SECURITY.md)"})
+            command.pop("auth", None)
+            tool_name = command.get("tool", "")""",
+    ),
+]
+
+
+def _find_mod_aicopilot_dirs() -> list[Path]:
+    """All deployed AICopilot copies FreeCAD may load (plus the bridge's)."""
+    dirs = [BRIDGE_DIR / "AICopilot"]
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        fc = Path(appdata) / "FreeCAD"
+        dirs.append(fc / "Mod" / "AICopilot")
+        if fc.is_dir():
+            dirs += sorted(fc.glob("v*/Mod/AICopilot"))
+    else:  # POSIX
+        for base in (Path.home() / ".local/share/FreeCAD",
+                     Path.home() / ".FreeCAD"):
+            dirs.append(base / "Mod" / "AICopilot")
+            if base.is_dir():
+                dirs += sorted(base.glob("v*/Mod/AICopilot"))
+    return [d for d in dirs if d.is_dir()]
+
+
+def _patch_file(path: Path, patches, label: str) -> tuple[bool, list]:
+    text = path.read_text(encoding="utf-8")
+    changed, failed = False, []
+    for name, old, new in patches:
+        if new in text:
+            print(f"[patches] {label} {name}: already applied")
+            continue
+        if old not in text:
+            failed.append(name)
+            print(f"[patches] {label} {name}: ANCHOR NOT FOUND (upstream changed?)")
+            continue
+        text = text.replace(old, new, 1)
+        changed = True
+        print(f"[patches] {label} {name}: applied")
+    if changed:
+        path.write_text(text, encoding="utf-8")
+        print(f"[patches] wrote {path}")
+    return changed, failed
+
+
 def apply(bridge_dir: Path = BRIDGE_DIR) -> int:
     server_py = bridge_dir / "freecad_mcp_server.py"
     if not server_py.is_file():
         print(f"[patches] bridge not deployed at {server_py} — nothing to patch")
         return 0
 
-    module_src = REPO / "server" / "bridge_patches" / "freecad_autostart.py"
-    shutil.copy2(module_src, bridge_dir / "freecad_autostart.py")
-    print(f"[patches] deployed freecad_autostart.py -> {bridge_dir}")
+    src = REPO / "server" / "bridge_patches"
+    shutil.copy2(src / "freecad_autostart.py", bridge_dir / "freecad_autostart.py")
+    shutil.copy2(src / "mcp_auth.py", bridge_dir / "mcp_auth.py")
+    print(f"[patches] deployed freecad_autostart.py + mcp_auth.py -> {bridge_dir}")
 
-    text = server_py.read_text(encoding="utf-8")
-    changed = False
-    failed = []
-    for name, old, new in PATCHES:
-        if new in text:
-            print(f"[patches] {name}: already applied")
-            continue
-        if old not in text:
-            failed.append(name)
-            print(f"[patches] {name}: ANCHOR NOT FOUND (upstream changed?)")
-            continue
-        text = text.replace(old, new, 1)
-        changed = True
-        print(f"[patches] {name}: applied")
+    failed: list = []
+    _, f = _patch_file(server_py, PATCHES, "bridge")
+    failed += f
 
-    if changed:
-        server_py.write_text(text, encoding="utf-8")
-        print(f"[patches] wrote {server_py}")
+    # FreeCAD-side handler: every deployed AICopilot copy gets the auth module
+    # and the enforcement patch.
+    for d in _find_mod_aicopilot_dirs():
+        handler = d / "freecad_mcp_handler.py"
+        if not handler.is_file():
+            continue
+        shutil.copy2(src / "mcp_auth.py", d / "mcp_auth.py")
+        _, f = _patch_file(handler, HANDLER_PATCHES, f"handler[{d.parent.parent.name or d}]")
+        failed += f
+
     if failed:
         print(f"[patches] FAILED: {', '.join(failed)} — re-fit anchors in "
               f"install/apply_bridge_patches.py against the new upstream")

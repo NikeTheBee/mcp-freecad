@@ -7,16 +7,19 @@ import json
 import socket
 import sys
 import time
+from pathlib import Path
 
-sys.path.insert(0, r"C:\Users\Administrateur\.freecad-mcp")
+sys.path.insert(0, str(Path.home() / ".freecad-mcp"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "server" / "bridge_patches"))
 from mcp_bridge_framing import send_message, receive_message
+import mcp_auth  # NF5: the socket requires the shared token
 
 
 def _one_shot(tool, args):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("localhost", 23456))
     try:
-        send_message(s, json.dumps({"tool": tool, "args": args}))
+        send_message(s, json.dumps(mcp_auth.attach({"tool": tool, "args": args})))
         resp = receive_message(s, timeout=30.0)
         return json.loads(resp) if resp else None
     finally:

@@ -88,12 +88,14 @@ def main() -> int:
     # the live phase1/mcp-loop tests below run instead of being skipped.
     # Skipped in CI (MCPFC_SKIP_GRAFTS) where no real FreeCAD install exists.
     if not os.environ.get("MCPFC_SKIP_GRAFTS"):
-        ok, out = _run([sys.executable, str(HERE / "autostart_test.py")])
-        passed = ok and "AUTOSTART_OK" in out
-        results.append(("autostart_test.py", passed))
-        print(f"[{'PASS' if passed else 'FAIL'}] autostart_test.py")
-        if not passed:
-            print("    " + out.strip().replace("\n", "\n    ")[:800])
+        for script, sentinel in (("autostart_test.py", "AUTOSTART_OK"),
+                                 ("auth_test.py", "AUTH_OK")):
+            ok, out = _run([sys.executable, str(HERE / script)])
+            passed = ok and sentinel in out
+            results.append((script, passed))
+            print(f"[{'PASS' if passed else 'FAIL'}] {script}")
+            if not passed:
+                print("    " + out.strip().replace("\n", "\n    ")[:800])
 
     if not Path(FREECADCMD).exists():
         print(f"!! freecadcmd not found at {FREECADCMD} "
