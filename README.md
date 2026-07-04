@@ -73,14 +73,18 @@ volume / bounding box in plain text — no manual modeling, no screenshot on the
 | Fabrication | STL (watertight-gated) · mesh repair · STEP/IGES exchange | ✅ |
 | Analysis | FEM (CalculiX, ships with FreeCAD) · drone sizing (momentum theory: T/W, hover power, endurance) | ✅ setup |
 | Memory | Resume a project across sessions from state alone — runnable proof: [examples/resume_between_sessions.py](examples/resume_between_sessions.py) | ✅ |
-| Mechanism | Assemblies · spur gears · fillet/chamfer/holes/patterns · fits & tolerances | ✅ |
+| Mechanism | Assemblies · spur gears · fillet/chamfer/holes/patterns · fits & tolerances · linkage kinematics (slider-crank/four-bar) | ✅ |
+| 2D plans | TechDraw views + dimensions → DXF (headless) | ✅ |
+| CAM | G-code on FreeCAD 1.1 (drilling + grbl post) | ✅ basic |
+| Docs | Bill of materials / nomenclature → CSV | ✅ |
 | Robotics | URDF/xacro export + full ament_cmake ROS2 package (CROSS graft, no ROS2 needed) · ros2_control/sensors/Gazebo-Sim tags + controllers YAML | ✅ |
 | CAM · CFD · Gazebo sim | G-code · OpenFOAM · ROS2 simulation | needs FreeCAD 1.2-dev / external runtimes |
 
 Domain knowledge lives in [`skills/`](skills) — `skill-partdesign`, `skill-rocket`, `skill-drone`,
 `skill-print3d`, `skill-exchange`, `skill-fem`, `skill-assembly`, `skill-gear`, `skill-robotics-ros`,
-`skill-verify`, `skill-cfd` (external-OpenFOAM fallback), `skill-cam` (1.2-dev status stub) —
-loaded on demand to keep token cost low. The full suite (`python install/run_all_tests.py`)
+`skill-verify`, `skill-cfd` (external-OpenFOAM fallback), `skill-cam` (G-code on 1.1),
+`skill-techdraw` (2D plans), `skill-kinematics` (linkage motion), `skill-fasteners-bom` — loaded on
+demand to keep token cost low. The full suite (`python install/run_all_tests.py`) is **30/30** and
 also runs as a core subset in CI ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
 
 ## Repository layout

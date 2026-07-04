@@ -50,6 +50,8 @@ CORE_TESTS = [
     ("layers_test.py", "LAYERS_TEST_OK"),
     ("techdraw_test.py", "TECHDRAW_OK"),
     ("kinematics_test.py", "KINEMATICS_OK"),
+    ("cam_test.py", "CAM_OK"),
+    ("bom_test.py", "BOM_OK"),
     ("print3d_test.py", "PRINT3D_OK"),
     ("exchange_test.py", "EXCHANGE_OK"),
     ("fem_test.py", "FEM_OK"),

@@ -1,26 +1,36 @@
 # skill-cam
 
-**Load when:** the task asks for machining/CNC — toolpaths, G-code, milling, "Path/CAM job".
+**Load when:** machining / CNC — toolpaths, G-code, drilling/milling, "Path/CAM job" (§4.5).
 
-## Honest status on FreeCAD 1.1.x (cahier des charges §12, D5)
-Scriptable CAM on 1.1.x is **not supported by this project**: the base MCP server's CAM
-dispatchers (`cam_operations`, `cam_tools`, `cam_tool_controllers`) target the reworked CAM
-workbench of **FreeCAD 1.2-dev**, which is not yet released (see `docs/COMPATIBILITY.md`).
-Do NOT improvise Path scripting against 1.1.x — the API churn is exactly what R6/R10-class
-breakage looks like.
+## Status: CAM works on FreeCAD 1.1 (gap-analysis correction)
+Earlier notes said "wait for 1.2". The opposite is true: **1.1 is the right target** — Path/CAM is
+scriptable **headless** here (Job + operations + post-processor), whereas **1.2 has a custom
+post-processor regression** ([FreeCAD#26006](https://github.com/FreeCAD/FreeCAD/issues/26006)).
+Stay on 1.1 for scripted CAM.
 
-## What to do TODAY when a user wants to fabricate
-| Need | Route |
+## Drill + post G-code in one call
+```python
+import sys; sys.path.insert(0, r"<repo>\server")
+from freecad_layers import cam
+res = cam.drill_and_post(part, r"<out>\part.nc", processor="grbl")
+print(cam.verdict(res))   # OK CAM: holes=1 cmds=10 post=grbl -> ...\part.nc
+```
+`drill_and_post` finds every cylindrical hole on the part, drills it, and posts real G-code.
+
+## Building blocks
+| Call | Does |
 |---|---|
-| 3D printing | `skill-print3d` — watertight-gated STL export, mesh repair |
-| CNC at a shop / external CAM | `skill-exchange` — STEP (preferred) or IGES export; any CAM package imports it |
-| Simple laser/plate work | export the face profile as DXF via `importDXF` |
+| `make_job(part, name)` | create a CAM Job (a part belongs to ONE job) with a default tool controller |
+| `drill_holes(job, part, tool_controller=None)` | Drilling op on all cylindrical faces → `{op, holes, commands}` |
+| `post_gcode(job, path, processor="grbl", overwrite=False)` | post to a `.nc/.gcode/.ngc/.tap/.cnc/.g` file (refuses other extensions & silent clobber) |
 
-Always state the limitation plainly: "G-code generation needs FreeCAD 1.2; meanwhile here is a
-STEP file any CAM software can use."
+Installed post-processors include `grbl`, `linuxcnc`, `mach3_4`, etc. — pass the name to `processor`.
 
-## When FreeCAD 1.2 ships (upgrade playbook)
-1. Follow the upgrade checklist in `docs/COMPATIBILITY.md` (env var, bootstrap, full test suite).
-2. The bridge's CAM dispatchers become usable: job → tools → tool controllers → operations
-   (profile, pocket, drilling, surfacing) → post-processor (grbl/linuxcnc/mach — multiple ship).
-3. Replace this stub with real recipes, validated one operation at a time (§11 règle d'or).
+## Limits (honest)
+- Covered here: **drilling** (the most common, robust op). Profile/Pocket/MillFace ops exist
+  (`Path.Op.*`) and can be added the same way — extend `cam.py`, validated one op at a time (§11).
+- Always sanity-check the G-code against your machine/post before cutting metal. Simulate first.
+
+## Verify
+`install/cam_test.py` (`CAM_OK`) — drills a plate, posts grbl G-code, and checks the secure output
+gate (extension + clobber refusal).

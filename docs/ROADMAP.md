@@ -9,9 +9,15 @@
 |---|---|---|
 | Base MCP | blwfish/freecad-mcp installé, bridge `~/.freecad-mcp`, addon AICopilot | §6.2 |
 | Couches maison | `server/freecad_layers/` — state / verify / checkpoint, testées | §7 |
-| Skills | 10 skills (partdesign, rocket, drone, verify, print3d, fem, exchange, assembly, gear, robotics-ros) | §9 |
-| Install | `install/bootstrap.py` idempotent multi-OS, grafts épinglés | §11 Phase 0 |
-| Tests | `install/run_all_tests.py` 20/20 + CI (subset core) | §13 CI |
+| Skills | 15 skills (partdesign, rocket, drone, verify, print3d, fem, exchange, assembly, gear, robotics-ros, cfd, cam, techdraw, kinematics, fasteners-bom) | §9 |
+| Install | `install/bootstrap.py` idempotent multi-OS, grafts épinglés (Rocket, AirPlaneDesign, CROSS, FastenersWB) | §11 Phase 0 |
+| Tests | `install/run_all_tests.py` 30/30 + CI (subset core) | §13 CI |
+| Plans 2D | TechDraw : vues + cotes + export DXF headless (`skill-techdraw`) | §4.6 |
+| Cinématique | Solveur linkage analytique (dyad/slider-crank/four-bar) + solveur natif (`skill-kinematics`) | §4.2/§4.4 |
+| CAM | G-code sur 1.1 : job + perçage + post grbl (`skill-cam`, décision « attendre 1.2 » inversée) | §4.5 |
+| IK | IK CROSS/Pinocchio exposée avec check de disponibilité | §4.2 |
+| Nomenclature | BOM groupé + export CSV (`skill-fasteners-bom`) | §4.4 |
+| Sécurité by design | Gates `safe_out_path`/`safe_under`, auth jeton socket, scan secrets | NF5 |
 | Publication | Repo public GitHub, README, LICENSE CC BY-NC 4.0, CREDITS, SECURITY | §13, Phase 5 |
 | Robustesse | Capture crash OCCT (base), audit compat R1–R10 | NF2, §6.2 |
 | Token-minimal | CLAUDE.md court, texte-seul par défaut, outils nommés | §8 |

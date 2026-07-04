@@ -33,6 +33,8 @@ GRAFTS = {
     "AirPlaneDesign": ("https://github.com/FredsFactory/FreeCAD_AirPlaneDesign", False, None),
     # CROSS robotics: dir name must be the namespace `freecad.cross` (see skill-robotics-ros).
     "freecad.cross": ("https://github.com/galou/freecad.cross", False, None),
+    # Fasteners (ISO screws/nuts/washers/threads) — on-demand graft (GAP G5).
+    "FastenersWB": ("https://github.com/shaise/FreeCAD_FastenersWB", False, "v0.5.39"),
 }
 HOME = Path.home()
 BRIDGE_DIR = HOME / ".freecad-mcp"
