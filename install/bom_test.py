@@ -26,6 +26,10 @@ def main() -> int:
         s.Placement.Base = App.Vector(5 + i * 8, 5, 0)
     lever = doc.addObject("Part::Box", "Lever")
     lever.Length, lever.Width, lever.Height = 30, 6, 6
+    # CSV-injection probe: a label that would be a formula in Excel.
+    evil = doc.addObject("Part::Box", "Evil")
+    evil.Label = "=HYPERLINK(evil)"
+    evil.Length, evil.Width, evil.Height = 2, 2, 2
     doc.recompute()
 
     rows = bom.collect(doc)
@@ -33,15 +37,19 @@ def main() -> int:
     by_name = {r["designation"]: r for r in rows}
     assert by_name["Screw"]["qty"] == 4, rows        # 4 identical screws -> one line
     assert by_name["Base"]["qty"] == 1 and by_name["Lever"]["qty"] == 1, rows
-    assert len(rows) == 3, rows                       # Base, Screw, Lever
+    assert len(rows) == 4, rows                       # Base, Screw, Lever, Evil
 
     with tempfile.TemporaryDirectory() as td:
         csv_path = str(Path(td) / "nomenclature.csv")
         summary = bom.bom_for(doc, csv_path)
         print(bom.verdict(summary))
-        assert summary["total_parts"] == 6, summary   # 1+4+1
+        assert summary["total_parts"] == 7, summary   # 1+4+1+1
         text = Path(csv_path).read_text(encoding="utf-8")
         assert "Designation" in text and "Screw" in text, text
+        # formula neutralized: the cell must be quoted, never bare "=..."
+        assert "'=HYPERLINK(evil)" in text and '\n"=HYPERLINK' not in text \
+            and ",=HYPERLINK" not in text, text
+        print("CSV formula injection neutralized: OK")
 
         # secure-by-design: wrong extension + clobber refused
         try:

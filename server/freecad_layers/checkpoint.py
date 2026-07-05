@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 
 import FreeCAD  # available inside FreeCAD / freecadcmd
 
-from . import project_dir
+from . import project_dir, safe_under
 from . import state as _state
 
 
@@ -67,7 +67,11 @@ def list_checkpoints() -> List[Dict[str, Any]]:
 def restore(name: str):
     """Open the named checkpoint document and return it (becomes active)."""
     entry = next((c for c in list_checkpoints() if c.get("name") == name), None)
-    path = _ckpt_dir() / (entry["file"] if entry else f"{_safe(name)}.FCStd")
+    # `entry["file"]` comes from state.json (on-disk, tamperable): anchor it
+    # under /checkpoints so a doctored state can't make us open an arbitrary
+    # path (secure by design — safe_under).
+    fname = entry["file"] if entry else f"{_safe(name)}.FCStd"
+    path = safe_under(_ckpt_dir(), fname)
     if not path.exists():
         raise ValueError(f"Checkpoint {name!r} not found at {path}")
     return FreeCAD.openDocument(str(path))

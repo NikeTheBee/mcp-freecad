@@ -58,4 +58,16 @@ names = [o.Name for o in restored.Objects]
 print("RESTORED_OBJECTS:", names)
 assert "Box" in names
 
+# --- secure-by-design: a tampered state.json must not escape /checkpoints --
+s = state.load()
+s["checkpoints"].append({"name": "evil", "file": "..\\..\\outside.FCStd",
+                         "at": "now", "note": ""})
+state.save(s)
+try:
+    checkpoint.restore("evil")
+    print("FAIL: traversal filename accepted")
+    sys.exit(1)
+except ValueError as e:
+    print("tampered checkpoint path refused: OK")
+
 print("LAYERS_TEST_OK")

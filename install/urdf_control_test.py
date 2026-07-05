@@ -55,6 +55,15 @@ def main() -> int:
     assert "joint_state_broadcaster" in yaml_text and "- shoulder" in yaml_text
     assert "position_controllers/JointGroupPositionController" in yaml_text
 
+    # secure-by-design: names from external documents must be validated —
+    # a newline-bearing name would restructure the generated YAML.
+    try:
+        urdf_aug.controllers_yaml(["ok_name", "evil:\n  injected: true"])
+        print("FAIL: YAML-injection name accepted")
+        return 1
+    except ValueError:
+        print("invalid ROS name refused: OK")
+
     print(urdf_aug.verdict(reparsed))
     print("URDF_CONTROL_OK")
     return 0

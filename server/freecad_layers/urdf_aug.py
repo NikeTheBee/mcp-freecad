@@ -10,8 +10,21 @@ later in a ROS2 workspace (`colcon build`), never executed here.
 """
 from __future__ import annotations
 
+import re
 import xml.etree.ElementTree as et
 from typing import Iterable
+
+_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_./-]*$")
+
+
+def _valid_name(name: str) -> str:
+    """ROS-style identifier gate. Joint/link names may come from imported
+    documents (external data); reject anything that could restructure the
+    generated YAML/URDF (newlines, quotes, colons...)."""
+    if not isinstance(name, str) or not _NAME_RE.match(name):
+        raise ValueError(f"invalid ROS name: {name!r} "
+                         "(allowed: letters, digits, _ . / -)")
+    return name
 
 
 # ── ros2_control ─────────────────────────────────────────────────────────────
@@ -24,11 +37,11 @@ def add_ros2_control(robot: et.Element, joint_names: Iterable[str],
     state interfaces (position+velocity) are always exposed.
     """
     rc = et.SubElement(robot, "ros2_control",
-                       {"name": name, "type": "system"})
+                       {"name": _valid_name(name), "type": "system"})
     hw = et.SubElement(rc, "hardware")
     et.SubElement(hw, "plugin").text = "gz_ros2_control/GazeboSimSystem"
     for jn in joint_names:
-        j = et.SubElement(rc, "joint", {"name": jn})
+        j = et.SubElement(rc, "joint", {"name": _valid_name(jn)})
         et.SubElement(j, "command_interface", {"name": interface})
         et.SubElement(j, "state_interface", {"name": "position"})
         et.SubElement(j, "state_interface", {"name": "velocity"})
@@ -54,7 +67,7 @@ def add_gazebo_ros2_control_plugin(robot: et.Element,
 def controllers_yaml(joint_names: Iterable[str],
                      controller: str = "position") -> str:
     """ros2_controllers YAML: joint_state_broadcaster + one trajectory controller."""
-    joints = list(joint_names)
+    joints = [_valid_name(j) for j in joint_names]
     joint_lines = "\n".join(f"      - {j}" for j in joints)
     ctrl_type = {"position": "position_controllers/JointGroupPositionController",
                  "velocity": "velocity_controllers/JointGroupVelocityController",

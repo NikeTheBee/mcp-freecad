@@ -53,6 +53,15 @@ def collect(doc, include_hidden: bool = True) -> List[Dict[str, Any]]:
     return rows
 
 
+def _csv_safe(value: Any) -> Any:
+    """Neutralize CSV formula injection: labels come from documents (external
+    data); a designation like '=HYPERLINK(...)' must not execute in Excel."""
+    s = str(value)
+    if s and s[0] in "=+-@\t":
+        return "'" + s
+    return value
+
+
 def export_csv(rows: List[Dict[str, Any]], path: str,
                overwrite: bool = False) -> str:
     """Write the BOM to a CSV nomenclature (secure output gate)."""
@@ -61,8 +70,8 @@ def export_csv(rows: List[Dict[str, Any]], path: str,
         w = csv.writer(f)
         w.writerow(["Item", "Designation", "Qty", "Volume_mm3", "Refs"])
         for r in rows:
-            w.writerow([r["item"], r["designation"], r["qty"],
-                        r["volume_mm3"], ";".join(r["refs"])])
+            w.writerow([r["item"], _csv_safe(r["designation"]), r["qty"],
+                        r["volume_mm3"], _csv_safe(";".join(r["refs"]))])
     return str(out)
 
 

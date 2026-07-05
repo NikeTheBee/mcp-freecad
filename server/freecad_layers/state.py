@@ -48,9 +48,16 @@ def load() -> Dict[str, Any]:
 
 
 def save(state: Dict[str, Any]) -> None:
+    """Atomic write: a crash mid-write must never corrupt the project memory
+    (NF2 — the memory IS the recovery mechanism). Write to a temp file in the
+    same directory, then replace."""
     state["updated"] = _now()
-    with _state_path().open("w", encoding="utf-8") as f:
+    p = _state_path()
+    tmp = p.with_suffix(".json.tmp")
+    with tmp.open("w", encoding="utf-8") as f:
         json.dump(state, f, indent=2, ensure_ascii=False)
+    import os
+    os.replace(tmp, p)
 
 
 # -- convenience mutators (load -> change -> save) --------------------------
