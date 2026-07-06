@@ -86,12 +86,23 @@ def add_view(page, objects, direction: str | Tuple[float, float, float] = "front
 
 
 def add_extent_dims(view, horizontal: bool = True, vertical: bool = True) -> List:
-    """Overall-size dimensions (the minimum any workshop plan needs)."""
+    """Overall-size dimensions (the minimum any workshop plan needs).
+
+    Tolerant: TechDraw can throw "Dim extent not found" on views whose
+    geometry isn't ready or is edge-degenerate for one direction; a plan with
+    views but a missing auto-dim is still a valid deliverable, so each dim is
+    best-effort rather than fatal.
+    """
+    view.Document.recompute()
     dims = []
-    if horizontal:
-        dims.append(TechDraw.makeExtentDim(view, [], 0))
-    if vertical:
-        dims.append(TechDraw.makeExtentDim(view, [], 1))
+    for want, direction in ((horizontal, 0), (vertical, 1)):
+        if not want:
+            continue
+        try:
+            dims.append(TechDraw.makeExtentDim(view, [], direction))
+        except Exception as e:  # noqa: BLE001 — RuntimeError from OCCT
+            print(f"extent dim {'H' if direction == 0 else 'V'} skipped "
+                  f"on {view.Name}: {e}")
     view.Document.recompute()
     return dims
 
